@@ -7,6 +7,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <sys/wait.h>
 #include "StringVector.c"
 
 char *curr_directory;
@@ -201,6 +202,20 @@ void command_handler(char* command_breakdown[50], int count_args){
             command_handler(command_breakdown + 2, count_args - 2);
         }
     }
+    else{
+        
+        int flag = 1;
+
+        if(args_finder(command_breakdown, "&", count_args)!=-1)
+            flag = 0;
+
+        int pid = fork();
+        if(pid==0)
+            execvp(command_breakdown[0], (command_breakdown+1));
+        
+        if(flag)
+            while(wait(NULL)>0);
+    }
     
 }
 
@@ -224,6 +239,10 @@ int main(){
         if(input[strlen(input)-1]=='\n')
             input[strlen(input)-1]='\0';
         //scanf("%s", input);
+
+        for(int i=0;i<strlen(input);i++)
+            if(input[i]=='\t')
+                input[i]=' ';
         int count = inputHandler(input, commands_list);
         free(input);
         for(int i=0;i<count;i++){
