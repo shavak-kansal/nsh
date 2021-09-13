@@ -15,3 +15,12 @@ void StringVectorInit(StringVector* LS){
     LS->list = (char**)malloc(LS->maxSize*sizeof(char*));
     LS->size = 0;
 }
+
+void StringVectorErase(StringVector* V){
+    for(int i=0;i<V->size;i++){
+        free(V->list[i]);
+    }
+
+    free(V->list);
+}
+
