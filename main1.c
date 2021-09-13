@@ -24,8 +24,7 @@ int args_finder(char* command_breakdown[50], char *arg, int cnt){
 }
 
 int cdHandler(char* command_breakdown[50]){
-    //if(command_breakdown[1][strlen(command_breakdown[1])-1]=='\n')
-    //    command_breakdown[1][strlen(command_breakdown[1])-1]='\0';
+
     if(!strcmp(curr_directory, "~"))
         strcpy(curr_directory, home_directory);
     
@@ -52,26 +51,8 @@ int cdHandler(char* command_breakdown[50]){
 
 }
 
-int inputHandler(char* input, StringVector *l){
+int InputSanitize(char* input, StringVector* l, char* delim){
     char* token;
-    char delim[2] = ";";
-
-    token = strtok(input, delim);
-    StringVectorAdd(l, token);
-
-    token = strtok(NULL, delim);
-
-    while(token != NULL){
-        StringVectorAdd(l, token);
-        token = strtok(NULL, delim);
-    }
-
-    return l->size;
-}
-
-int inputHandler2(char* input, StringVector* l){
-    char* token;
-    char delim[] = " \t";
     
     token = strtok(input, delim);
     StringVectorAdd(l, token);
@@ -142,7 +123,7 @@ void ls_handler(char* command_breakdown[50], int count_args){
 }
 
 void command_handler(char* command_breakdown[50], int count_args){
-    //printf("%s\n", command_breakdown[0]);
+
     if(!strcmp(command_breakdown[0],"echo")){
         int i=1;
         while(command_breakdown[i]!=NULL){
@@ -152,7 +133,6 @@ void command_handler(char* command_breakdown[50], int count_args){
         printf("\n");
     }
     else if(!strcmp(command_breakdown[0],"cd")){
-        //cdHandler(command_breakdown);
         chdir(command_breakdown[1]);
         getcwd(curr_directory, 100);
 
@@ -172,7 +152,6 @@ void command_handler(char* command_breakdown[50], int count_args){
     }
     else if(!strcmp(command_breakdown[0], "repeat")){
         for(int i=0;i<(command_breakdown[1][0]-'0');i++){
-            //printf("%p %p\n", &(command_breakdown[0]),command_breakdown+2);
             command_handler(command_breakdown + 2, count_args - 2);
         }
     }
@@ -217,17 +196,13 @@ int main(){
         if(input[strlen(input)-1]=='\n')
             input[strlen(input)-1]='\0';
 
-        // for(int i=0;i<strlen(input);i++)
-        //     if(input[i]=='\t')
-        //         input[i]=' ';
-
-        int count = inputHandler(input, &CommandList);
+        int count = InputSanitize(input, &CommandList, ";");
         free(input);
 
         for(int i=0;i<count;i++){
             StringVector commandBreakdown;
             StringVectorInit(&commandBreakdown);
-            int count_args = inputHandler2(CommandList.list[i], &commandBreakdown);
+            int count_args = InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
 
             for(int i=0;i<commandBreakdown.size;i++){
                 printf("%s\n", commandBreakdown.list[i]);
