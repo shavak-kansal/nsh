@@ -1,31 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <pwd.h>
-#include <grp.h>
-#include <time.h>
-#include <sys/wait.h>
-#include "StringVector.c"
+#include "utils.h"
 
 char *curr_directory;
 char *home_directory;
 
-int args_finder(char* command_breakdown[50], char *arg, int cnt){
-
-    for(int i=0;i<cnt;i++){
-        if(!strcmp(command_breakdown[i], arg))
-            return i;
-    }
-
-    return -1;
-}
-
 int cdHandler(char* command_breakdown[50]){
-    //if(command_breakdown[1][strlen(command_breakdown[1])-1]=='\n')
-    //    command_breakdown[1][strlen(command_breakdown[1])-1]='\0';
+
     if(!strcmp(curr_directory, "~"))
         strcpy(curr_directory, home_directory);
     
@@ -51,49 +30,20 @@ int cdHandler(char* command_breakdown[50]){
     }
 
 }
-int inputHandler(char* input, char* list[10]){
+
+int InputSanitize(char* input, StringVector* l, char* delim){
     char* token;
-    //char* list[10];
-    char delim[2] = ";";
+    
     token = strtok(input, delim);
-    int index=0;
-    list[index] = (char*)malloc(400);
-    strcpy(list[index], token);
-    index++;
-    //printf("%s\n", token);
+    StringVectorAdd(l, token);
     token = strtok(NULL, delim);
 
     while(token != NULL){
-        list[index] = (char*)malloc(400);
-        strcpy(list[index], token);
-        index++;
-        //printf("%s\n", token);
+        StringVectorAdd(l, token);
         token = strtok(NULL, delim);
     }
 
-    return index;
-}
-
-int inputHandler2(char* input, char* list[50]){
-    char* token;
-    char delim[2] = " ";
-    token = strtok(input, delim);
-    int index=0;
-    list[index] = (char*)malloc(400);
-    strcpy(list[index], token);
-    index++;
-    //printf("%s\n", token);
-    token = strtok(NULL, delim);
-
-    while(token != NULL){
-        list[index] = (char*)malloc(400);
-        strcpy(list[index], token);
-        index++;
-        //printf("%s\n", token);
-        token = strtok(NULL, delim);
-    }
-
-    return index;
+    return l->size;
 }
 
 void ls_handler(char* command_breakdown[50], int count_args){
@@ -101,21 +51,6 @@ void ls_handler(char* command_breakdown[50], int count_args){
 
     int flag_a = 0;
     int flag_l = 0;
-    /* if(command_breakdown[1][0]=='-'){
-        if(!strcmp(command_breakdown[1],"-al")||!strcmp(command_breakdown[1],"-la")){
-            flag_a=flag_l=1;
-            ind_name++;
-        }
-        
-        if(!strcmp(command_breakdown[1],"-l")||!strcmp(command_breakdown[2],"-l")){
-            flag_l=1;
-            ind_name++;
-        }
-        if(!strcmp(command_breakdown[1],"-a")||!strcmp(command_breakdown[2],"-a")){
-            flag_a=1;
-            ind_name++;
-        }
-    } */
 
     if(((flag_a=flag_l=args_finder(command_breakdown, "-la", count_args))!=-1)||((flag_a=flag_l=args_finder(command_breakdown, "-al", count_args)))!=-1){
         ind_name++;
@@ -168,7 +103,7 @@ void ls_handler(char* command_breakdown[50], int count_args){
 }
 
 void command_handler(char* command_breakdown[50], int count_args){
-    //printf("%s\n", command_breakdown[0]);
+
     if(!strcmp(command_breakdown[0],"echo")){
         int i=1;
         while(command_breakdown[i]!=NULL){
@@ -178,7 +113,6 @@ void command_handler(char* command_breakdown[50], int count_args){
         printf("\n");
     }
     else if(!strcmp(command_breakdown[0],"cd")){
-        //cdHandler(command_breakdown);
         chdir(command_breakdown[1]);
         getcwd(curr_directory, 100);
 
@@ -198,7 +132,6 @@ void command_handler(char* command_breakdown[50], int count_args){
     }
     else if(!strcmp(command_breakdown[0], "repeat")){
         for(int i=0;i<(command_breakdown[1][0]-'0');i++){
-            //printf("%p %p\n", &(command_breakdown[0]),command_breakdown+2);
             command_handler(command_breakdown + 2, count_args - 2);
         }
     }
@@ -232,24 +165,30 @@ int main(){
     gethostname(systemname, 100);
     
     while(1){
-        char* commands_list[10];
+        StringVector CommandList;
+        StringVectorInit(&CommandList);
+        
         printf("<%s@%s:%s>", username, systemname, curr_directory);
+        
         char* input = (char*)malloc(4000);
         fgets(input, 4000, stdin);
+        
         if(input[strlen(input)-1]=='\n')
             input[strlen(input)-1]='\0';
-        //scanf("%s", input);
 
-        for(int i=0;i<strlen(input);i++)
-            if(input[i]=='\t')
-                input[i]=' ';
-        int count = inputHandler(input, commands_list);
+        int count = InputSanitize(input, &CommandList, ";");
         free(input);
-        for(int i=0;i<count;i++){
-            char* command_breakdown[50] = {NULL};
-            int count_args = inputHandler2(commands_list[i], command_breakdown);
 
-            command_handler(command_breakdown, count_args);
+        for(int i=0;i<count;i++){
+            StringVector commandBreakdown;
+            StringVectorInit(&commandBreakdown);
+            int count_args = InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
+
+            for(int i=0;i<commandBreakdown.size;i++){
+                printf("%s\n", commandBreakdown.list[i]);
+            }
+            printf("\n");
+            //command_handler(command_breakdown, count_args);
         }        
     }
 }
