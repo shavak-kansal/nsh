@@ -1,6 +1,6 @@
-#include <utils.h>
+#include "utils.h"
 
-int ArgsFinder(StringVector* l, char *arg, int cnt){
+int ArgsFinder(StringVector* l, char *arg){
 
     for(int i=0;i<l->size;i++){
         if(!strcmp(l->list[i], arg))

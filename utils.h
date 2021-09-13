@@ -1,6 +1,9 @@
 #ifndef __UTIL_H_
 #define __UTIL_H_
 
+char *curr_directory;
+char *home_directory;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,4 +17,7 @@
 
 #include "StringVector.c"
 #include "ArgsFinder.c"
+#include "lsHandler.c"
+#include "CommandHandler.c"
+
 #endif

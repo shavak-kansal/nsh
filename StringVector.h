@@ -8,3 +8,5 @@ typedef struct _StringVector {
 } StringVector;
 
 void StringVectorAdd(StringVector* LS, char* str);
+
+void StringVectorErase(StringVector* V);
