@@ -55,6 +55,7 @@ int main(){
     getlogin_r(username, 100);
     gethostname(systemname, 100);
     
+    printf("%d", getpid());
     while(1){
         StringVector CommandList;
         StringVectorInit(&CommandList);
@@ -67,13 +68,13 @@ int main(){
         if(input[strlen(input)-1]=='\n')
             input[strlen(input)-1]='\0';
 
-        int count = InputSanitize(input, &CommandList, ";");
+        InputSanitize(input, &CommandList, ";");
         free(input);
 
-        for(int i=0;i<count;i++){
+        for(int i=0;i<CommandList.size;i++){
             StringVector commandBreakdown;
             StringVectorInit(&commandBreakdown);
-            int count_args = InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
+            InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
 
             CommandHandler(&commandBreakdown);
             StringVectorErase(&commandBreakdown);

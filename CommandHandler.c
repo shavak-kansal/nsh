@@ -50,6 +50,12 @@ void CommandHandler(StringVector *l){
 
         StringVectorErase(&l_r);
     }
+    else if(!strcmp(l->list[0], "pinfo")){
+        if(l->size>1)
+            p_info(l->list[1]-'0');
+        else 
+            p_info(-1);
+    }
     else{
         
         int flag = 1;

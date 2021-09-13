@@ -45,7 +45,11 @@ void lsHandler(StringVector *l){
                 printf( (filePerms.st_mode & S_IWOTH) ? "w" : "-");
                 printf( (filePerms.st_mode & S_IXOTH) ? "x" : "-");
                 printf(" ");
-                printf("%lu %s %s ", filePerms.st_nlink, getpwuid(filePerms.st_uid)->pw_name, getgrgid(filePerms.st_gid)->gr_name/* , ctime(filePerms.c) */);
+                struct tm *timeptr;
+                timeptr =  localtime(&(filePerms.st_mtime));
+                char* time = (char*)malloc(100*sizeof(char));
+                strftime(time, 100,"%b %d %l:%M ",timeptr);
+                printf("%lu\t%s\t%s\t%ld\t%s", filePerms.st_nlink, getpwuid(filePerms.st_uid)->pw_name, getgrgid(filePerms.st_gid)->gr_name, filePerms.st_size, time);
 
             }
             printf("%s\n", list[i]->d_name);

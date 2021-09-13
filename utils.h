@@ -14,10 +14,12 @@ char *home_directory;
 #include <grp.h>
 #include <time.h>
 #include <sys/wait.h>
+#include "unistd.h"
 
 #include "StringVector.c"
 #include "ArgsFinder.c"
 #include "lsHandler.c"
 #include "CommandHandler.c"
+#include "p_info.c"
 
 #endif
