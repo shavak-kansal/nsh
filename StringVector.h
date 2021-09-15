@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
+#include "utils.h"
 
 typedef struct _StringVector {
     char **list;
@@ -10,3 +9,5 @@ typedef struct _StringVector {
 void StringVectorAdd(StringVector* LS, char* str);
 
 void StringVectorErase(StringVector* V);
+
+void StringVectorInit(StringVector* LS);

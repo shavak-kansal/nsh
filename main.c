@@ -55,7 +55,7 @@ int main(){
     getlogin_r(username, 100);
     gethostname(systemname, 100);
     
-    printf("%d", getpid());
+    //printf("%d\n", getpid());
     while(1){
         StringVector CommandList;
         StringVectorInit(&CommandList);

@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "functions.h"
 
 void CommandHandler(StringVector *l){
 
@@ -52,23 +53,37 @@ void CommandHandler(StringVector *l){
     }
     else if(!strcmp(l->list[0], "pinfo")){
         if(l->size>1)
-            p_info(l->list[1]-'0');
+            p_info(l->list[1][0]-'0');
         else 
             p_info(-1);
     }
     else{
         
-        int flag = 1;
+        int dontwait = 0;
 
         if(ArgsFinder(l, "&")!=-1)
-            flag = 0;
+            dontwait = 1;
 
         int pid = fork();
-        if(pid==0)
-            execvp(l->list[0], (l->list+1));
         
-        if(flag)
-            while(wait(NULL)>0);
+        if(pid==0){
+            //printf("I am child\n");
+
+            StringVectorAdd(l, NULL);
+
+            if(execvp(l->list[0], l->list)<0){
+                perror("Execvp error : ");
+                printf("This shouldn't print\n");
+                return;
+            }
+            // printf("Error execvp\n");
+            //exit(0);
+        }
+        else{
+            printf("child process, pid : %d\n", pid);
+            
+            wait(NULL);
+        }
     }
     
 }
