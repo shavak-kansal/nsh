@@ -11,3 +11,5 @@ void StringVectorAdd(StringVector* LS, char* str);
 void StringVectorErase(StringVector* V);
 
 void StringVectorInit(StringVector* LS);
+
+void StringVectorCopy(StringVector *src, StringVector *dst);

@@ -13,6 +13,7 @@ void StringVectorAdd(StringVector* LS, char* str){
     if(str==NULL){
         LS->list[LS->size] = NULL;
         LS->size++; 
+        return;
     }
     LS->list[LS->size] = (char*)malloc(strlen(str)*2);    
     strcpy(LS->list[LS->size], str);
@@ -38,3 +39,7 @@ void StringVectorErase(StringVector* V){
     V->maxSize = 0;
 }
 
+void StringVectorCopy(StringVector *src, StringVector *dst){
+    for(int i=0;i<src->size;i++)
+        StringVectorAdd(dst, src->list[i]);
+}

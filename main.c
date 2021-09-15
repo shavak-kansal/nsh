@@ -54,7 +54,9 @@ int main(){
     
     getlogin_r(username, 100);
     gethostname(systemname, 100);
-    
+    history curr_history;
+    curr_history.index=0;
+
     //printf("%d\n", getpid());
     while(1){
         StringVector CommandList;
@@ -71,12 +73,23 @@ int main(){
         InputSanitize(input, &CommandList, ";");
         free(input);
 
+        for(int i=0;i<CommandList.size;i++)
+            addToHis(CommandList.list[i], &curr_history);
+
         for(int i=0;i<CommandList.size;i++){
             StringVector commandBreakdown;
             StringVectorInit(&commandBreakdown);
             InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
 
-            CommandHandler(&commandBreakdown);
+            if(!strcmp(commandBreakdown.list[0], "history")){
+                if(commandBreakdown.size==1)
+                    HistoryPrint(-1, &curr_history);
+                else
+                    HistoryPrint(commandBreakdown.list[1][0]-'0', &curr_history);
+            }
+            else 
+                CommandHandler(&commandBreakdown);
+            
             StringVectorErase(&commandBreakdown);
         }        
     }

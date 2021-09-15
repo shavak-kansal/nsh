@@ -15,11 +15,13 @@ char *home_directory;
 #include <time.h>
 #include <sys/wait.h>
 #include "unistd.h"
+#include "history.h"
 
 #include "StringVector.c"
 #include "ArgsFinder.c"
 #include "lsHandler.c"
 #include "CommandHandler.c"
 #include "p_info.c"
+#include "history.c"
 
 #endif
