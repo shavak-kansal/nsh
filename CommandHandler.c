@@ -1,18 +1,21 @@
 #include "utils.h"
 #include "functions.h"
 
+strLink bgProcessList;
+
 void handler(){
     int status;
     int pid = wait(&status);
 
+    char *name = StrFindPid(&bgProcessList, pid);
     char msg[20];
 
-    if(status=0)
+    if(status==0)
         strcpy(msg, "normally");
     else 
         strcpy(msg, "abnormally");
         
-    printf("%s with %d exited %s\n", "", pid, msg);
+    printf("%s with %d exited %s\n", name, pid, msg);
 }
 void CommandHandler(StringVector *l){
 
@@ -79,7 +82,7 @@ void CommandHandler(StringVector *l){
             dontwait = 1;
 
         int pid = fork();
-        
+
         if(pid==0){
             if(dontwait){
                 free(l->list[index]);
@@ -94,8 +97,12 @@ void CommandHandler(StringVector *l){
             exit(0);
         }
         else{
-            signal(SIGCHLD, handler);
             
+            if(dontwait){
+                strLinkAdd(&bgProcessList, l->list[0], pid);
+                signal(SIGCHLD, handler);
+            }
+
             if(!dontwait)
                 wait(NULL);
         }
