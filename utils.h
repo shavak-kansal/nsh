@@ -16,6 +16,7 @@ char *home_directory;
 #include <sys/wait.h>
 #include "unistd.h"
 #include "history.h"
+#include "StringLinked.h"
 
 #include "StringVector.c"
 #include "ArgsFinder.c"
@@ -23,5 +24,6 @@ char *home_directory;
 #include "CommandHandler.c"
 #include "p_info.c"
 #include "history.c"
+#include "StringLinked.c"
 
 #endif

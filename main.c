@@ -1,5 +1,7 @@
 #include "utils.h"
 
+//strLink bgProcessList;
+
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -44,6 +46,7 @@ int InputSanitize(char* input, StringVector* l, char* delim){
 }
 
 int main(){
+    strLinkInit(&bgProcessList);
     char *username = (char*)malloc(400);
     char *systemname = (char*)malloc(400);
     curr_directory = (char*)malloc(400);
