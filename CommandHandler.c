@@ -1,6 +1,19 @@
 #include "utils.h"
 #include "functions.h"
 
+void handler(){
+    int status;
+    int pid = wait(&status);
+
+    char msg[20];
+
+    if(status=0)
+        strcpy(msg, "normally");
+    else 
+        strcpy(msg, "abnormally");
+        
+    printf("%s with %d exited %s\n", "", pid, msg);
+}
 void CommandHandler(StringVector *l){
 
     if(!strcmp(l->list[0],"echo")){
@@ -60,29 +73,31 @@ void CommandHandler(StringVector *l){
     else{
         
         int dontwait = 0;
-
-        if(ArgsFinder(l, "&")!=-1)
+        int index;
+        
+        if((index=ArgsFinder(l, "&"))!=-1)
             dontwait = 1;
 
         int pid = fork();
         
         if(pid==0){
-            //printf("I am child\n");
-
-            StringVectorAdd(l, NULL);
+            if(dontwait){
+                free(l->list[index]);
+                l->list[index] = NULL;
+            }
+            else 
+                StringVectorAdd(l, NULL);
 
             if(execvp(l->list[0], l->list)<0){
                 perror("Execvp error : ");
-                printf("This shouldn't print\n");
-                return;
             }
-            // printf("Error execvp\n");
-            //exit(0);
+            exit(0);
         }
         else{
-            printf("child process, pid : %d\n", pid);
+            signal(SIGCHLD, handler);
             
-            wait(NULL);
+            if(!dontwait)
+                wait(NULL);
         }
     }
     
