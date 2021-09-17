@@ -73,7 +73,7 @@ void CommandHandler(StringVector *l){
         for(int i=2;i<l->size;i++)
             StringVectorAdd(&l_r, l->list[i]);
 
-        for(int i=0;i<(l->list[1][0]-'0');i++){
+        for(int i=0;i<(atoi(l->list[1]));i++){
             CommandHandler(&l_r);  
         }
 
@@ -81,7 +81,7 @@ void CommandHandler(StringVector *l){
     }
     else if(!strcmp(l->list[0], "pinfo")){
         if(l->size>1)
-            p_info(l->list[1][0]-'0');
+            p_info(atoi(l->list[1][0]));
         else 
             p_info(-1);
     }

@@ -98,7 +98,7 @@ int main(){
                 if(commandBreakdown.size==1)
                     HistoryPrint(-1, &curr_history);
                 else
-                    HistoryPrint(commandBreakdown.list[1][0]-'0', &curr_history);
+                    HistoryPrint(atoi(commandBreakdown.list[1]) , &curr_history);
             }
             else if(!strcmp(commandBreakdown.list[0], "exit")){
                 HistoryWriteToFile(&curr_history);
