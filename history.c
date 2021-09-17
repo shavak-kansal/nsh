@@ -9,18 +9,21 @@ int HistoryPrint(int cnt, history *h){
         }
         else{
             for(int i=0;i<20;i++)
-                printf("%s", h->his[(h->index+i-1)%20]);
+                printf("%s", h->his[(h->index+i+19)%20]);
         }
     }
     else{
         for(int i=0;i<cnt;i++)
-            printf("%s\n", h->his[(h->index-i-1)%20]);
+            printf("%s\n", h->his[(h->index-i+19)%20]);
     }
 }
 
 void addToHis(char* str, history *h){
-    if(!strcmp(str, h->his[(h->index-1)%20]))
-        return;
+    if(h->his[(h->index+19)%20]!=NULL){
+        if(!strcmp(str, h->his[(h->index+19)%20]))
+            return;
+    }
+
     if(h->his[(h->index)%20]!=NULL)
         free(h->his[(h->index)%20]);
     h->his[(h->index)%20] = (char*)malloc(2*strlen(str)*sizeof(char));
@@ -64,4 +67,12 @@ void HistoryReadFromFile(history *h){
     }
 
     fclose(in);
+}
+
+void HistoryInit(history *h){
+    h->size=0;
+    h->index=0;
+    
+    for(int i=0;i<20;i++)
+        h->his[i] = NULL;
 }

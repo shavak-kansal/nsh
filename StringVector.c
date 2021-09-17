@@ -1,4 +1,4 @@
-#include "StringVector.h"
+#include "utils.h"
 
 void StringVectorAdd(StringVector* LS, char* str){
     if(LS->size>=LS->maxSize){

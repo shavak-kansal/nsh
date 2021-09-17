@@ -1,7 +1,9 @@
 #include "utils.h"
 
-//strLink bgProcessList;
-
+extern strLink bgProcessList;
+char *curr_directory;
+char *home_directory;
+char *last_directory;
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -47,11 +49,11 @@ int InputSanitize(char* input, StringVector* l, char* delim){
 
 int main(){
     strLinkInit(&bgProcessList);
-    char *username = (char*)malloc(400);
-    char *systemname = (char*)malloc(400);
-    curr_directory = (char*)malloc(400);
-    home_directory = (char*)malloc(400);
-    
+    char *username = (char*)malloc(400*sizeof(char));
+    char *systemname = (char*)malloc(400*sizeof(char));
+    curr_directory = (char*)malloc(400*sizeof(char));
+    home_directory = (char*)malloc(400*sizeof(char));
+    last_directory = (char*)malloc(400*sizeof(char));
     getcwd(home_directory, 400);
     getcwd(curr_directory, 400);
     //strcpy(curr_directory, "~\0");
@@ -59,8 +61,8 @@ int main(){
     getlogin_r(username, 100);
     gethostname(systemname, 100);
     history curr_history;
-    curr_history.index=0;
-    curr_history.size=0;
+    HistoryInit(&curr_history);
+
     HistoryReadFromFile(&curr_history);
     //printf("%d\n", getpid());
     while(1){

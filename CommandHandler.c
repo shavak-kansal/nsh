@@ -32,12 +32,22 @@ void CommandHandler(StringVector *l){
     }
     
     else if(!strcmp(l->list[0],"cd")){
-        chdir(l->list[1]);
 
+        int ret; 
+        if(l->size==1)
+            return;
+        else if(!strcmp(l->list[1], "~"))
+            ret = chdir(home_directory);
+        else 
+            ret = chdir(l->list[1]);
+        
+        if(ret==-1)
+            perror("Error with cd ");
+        
         getcwd(curr_directory, 100);
 
-        if(!strcmp(home_directory, curr_directory))
-            strcpy(curr_directory, "~");
+        // if(!strcmp(home_directory, curr_directory))
+        //     strcpy(curr_directory, "~");
 
     }
 
@@ -84,8 +94,11 @@ void CommandHandler(StringVector *l){
             dontwait = 1;
 
         int pid = fork();
-
-        if(pid==0){
+        
+        if(pid==-1){
+            perror("Fork error");
+        }
+        else if(pid==0){
             if(dontwait){
                 free(l->list[index]);
                 l->list[index] = NULL;

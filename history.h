@@ -10,8 +10,9 @@ typedef struct _command_history{
 } history;
 
 void addToHis(char* str, history *h);
-int print(int cnt, history *h);
+int HistoryPrint(int cnt, history *h);
 void HistoryWriteToFile(history *h);
-//void HistoryReadFromFile(history *h)
+void HistoryReadFromFile(history *h);
+void HistoryInit(history *h);
 
 #endif
