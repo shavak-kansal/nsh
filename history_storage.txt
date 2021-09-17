@@ -1,9 +1,11 @@
-7
-7
+9
+9
 echo 3
 echo hello
 echo nightmare
 pwd
 pinfo
+history
+exit
 history
 exit

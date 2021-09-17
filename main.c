@@ -75,8 +75,10 @@ int main(){
         char* input = (char*)malloc(4000);
         fgets(input, 4000, stdin);
         
-        if(input[strlen(input)-1]=='\n')
-            input[strlen(input)-1]='\0';
+        //if(input[strlen(input)-1]=='\n')
+        //    input[strlen(input)-1]='\0';
+
+        input[strcspn(input, "\n")] = 0;
 
         InputSanitize(input, &CommandList, ";");
         free(input);

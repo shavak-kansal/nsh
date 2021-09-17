@@ -19,6 +19,8 @@ int HistoryPrint(int cnt, history *h){
 }
 
 void addToHis(char* str, history *h){
+    if(!strcmp(str, h->his[(h->index-1)%20]))
+        return;
     if(h->his[(h->index)%20]!=NULL)
         free(h->his[(h->index)%20]);
     h->his[(h->index)%20] = (char*)malloc(2*strlen(str)*sizeof(char));
