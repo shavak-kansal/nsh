@@ -44,14 +44,21 @@ void HistoryWriteToFile(history *h){
 void HistoryReadFromFile(history *h){
     FILE *in = fopen("history_storage.txt", "r");
 
-    fscanf(in, "%d\n", h->index);
-    fscanf(in, "%d\n", h->size);
+    fscanf(in, "%d\n", &h->index);
+    fscanf(in, "%d\n", &h->size);
 
     for(int i=0;i<h->size;i++){
-        char temp[1000];
-        fscanf(in, "%s\n", temp);
-        h->his[i] = (char*)malloc(2*strlen(temp)*sizeof(char));
-        strcpy(h->his[i], temp);
+        //char *temp;
+        char **lineptr = (char**)malloc(sizeof(char*));
+        size_t line_size = 999;
+        *lineptr = NULL;
+        //fscanf(in, "%s\n", temp);
+        getline(lineptr, &line_size, in);
+        h->his[i] = (char*)malloc(2*strlen(*lineptr)*sizeof(char));
+        strcpy(h->his[i], *lineptr);
+        h->his[i][strcspn(h->his[i], "\n")] = 0;
+        free(*lineptr);
+        free(lineptr);
     }
 
     fclose(in);
