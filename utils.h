@@ -25,5 +25,5 @@ char *home_directory;
 #include "p_info.c"
 #include "history.c"
 #include "StringLinked.c"
-
+#include "pwd.c"
 #endif

@@ -53,8 +53,9 @@ int main(){
     home_directory = (char*)malloc(400);
     
     getcwd(home_directory, 400);
-    strcpy(curr_directory, "~\0");
-    
+    getcwd(curr_directory, 400);
+    //strcpy(curr_directory, "~\0");
+    //printf("curr : %s home :%s\n",curr_directory, home_directory);
     getlogin_r(username, 100);
     gethostname(systemname, 100);
     history curr_history;
@@ -65,8 +66,11 @@ int main(){
         StringVector CommandList;
         StringVectorInit(&CommandList);
         
-        printf("<%s@%s:%s>", username, systemname, curr_directory);
-        
+        char *msg1;
+        msg1 = pwd();
+        printf("<%s@%s:%s>", username, systemname, msg1);
+        free(msg1);
+
         char* input = (char*)malloc(4000);
         fgets(input, 4000, stdin);
         

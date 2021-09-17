@@ -43,11 +43,13 @@ void CommandHandler(StringVector *l){
 
     else if(!strcmp(l->list[0],"pwd")){
     
-        if(curr_directory[0]!='~')
-            printf("%s\n", curr_directory);
-        else 
-            printf("%s\n", home_directory);
-    
+        // if(curr_directory[0]!='~')
+        //     printf("%s\n", curr_directory);
+        // else 
+        //     printf("%s\n", home_directory);
+        char *msg = pwd();
+        printf("%s\n", msg);
+        free(msg);
     }
 
     else if(!strcmp(l->list[0], "ls")){
