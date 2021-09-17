@@ -5,12 +5,11 @@
 
 typedef struct _command_history{
     char* his[20];
-    int index;
     int size;
 } history;
 
 void addToHis(char* str, history *h);
-int HistoryPrint(int cnt, history *h);
+void HistoryPrint(int cnt, history *h);
 void HistoryWriteToFile(history *h);
 void HistoryReadFromFile(history *h);
 void HistoryInit(history *h);

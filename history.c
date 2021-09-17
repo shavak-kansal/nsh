@@ -1,42 +1,57 @@
 #include "utils.h"
 
-int HistoryPrint(int cnt, history *h){
-    
-    if(cnt==-1){
-        if(h->index<20){
-            for(int i=0;i<h->index;i++)
-                printf("%s\n", h->his[i]);
-        }
-        else{
-            for(int i=0;i<20;i++)
-                printf("%s", h->his[(h->index+i+19)%20]);
-        }
+void _HistorySwapThing(history *h){
+    free(h->his[0]);
+    for(int i=0;i<19;i++)
+        h->his[i] = h->his[i+1];
+
+    h->size--;
+}
+
+
+void HistoryAdd(char* str, history *h){
+    if(h->size!=0){
+        if(!strcmp(h->his[h->size-1], str))
+            return;
+    }
+    if(h->size==20){
+        _HistorySwapThing(h);
+        h->his[19] = (char*)malloc(2*strlen(str)*sizeof(char));
+        strcpy(h->his[19],str);
+        h->size++;
     }
     else{
-        for(int i=0;i<cnt;i++)
-            printf("%s\n", h->his[(h->index-i+19)%20]);
+        if(h->his[h->size]!=NULL)
+            free(h->his[h->size]);
+        
+        h->his[h->size] = (char*)malloc(2*strlen(str)*sizeof(char));
+        strcpy(h->his[h->size],str);
+        h->size++;
     }
 }
 
 void addToHis(char* str, history *h){
-    if(h->his[(h->index+19)%20]!=NULL){
-        if(!strcmp(str, h->his[(h->index+19)%20]))
-            return;
-    }
+    HistoryAdd(str, h);
+}
 
-    if(h->his[(h->index)%20]!=NULL)
-        free(h->his[(h->index)%20]);
-    h->his[(h->index)%20] = (char*)malloc(2*strlen(str)*sizeof(char));
-    strcpy(h->his[(h->index)%20], str);
-    h->index++;
-    if(h->size<20)
-    h->size++;
+void HistoryPrint(int cnt, history *h){
+    if(cnt==-1){
+        for(int i=0;i<h->size;i++)
+            printf("%s\n", h->his[i]);
+    }
+    else {
+        int m = cnt;
+        if(h->size<m)
+            m = h->size;
+        
+        for(int i=0;i<m;i++)
+            printf("%s\n", h->his[i]);
+    }
 }
 
 void HistoryWriteToFile(history *h){
     FILE *out = fopen("history_storage.txt", "w");
 
-    fprintf(out, "%d\n", h->index);
     fprintf(out, "%d\n", h->size);
 
     for(int i=0;i<h->size;i++){
@@ -49,7 +64,6 @@ void HistoryWriteToFile(history *h){
 void HistoryReadFromFile(history *h){
     FILE *in = fopen("history_storage.txt", "r");
 
-    fscanf(in, "%d\n", &h->index);
     fscanf(in, "%d\n", &h->size);
 
     for(int i=0;i<h->size;i++){
@@ -71,7 +85,6 @@ void HistoryReadFromFile(history *h){
 
 void HistoryInit(history *h){
     h->size=0;
-    h->index=0;
     
     for(int i=0;i<20;i++)
         h->his[i] = NULL;
