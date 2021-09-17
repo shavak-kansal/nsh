@@ -7,11 +7,31 @@ void lsHandler(StringVector *l){
     int flag_l = 0;
 
     if(((flag_a=flag_l=ArgsFinder(l, "-la"))!=-1)||((flag_a=flag_l=ArgsFinder(l, "-la")))!=-1){
-        ind_name++;
+        //ind_name++;
     }
     else {
         flag_a = ArgsFinder(l, "-a");
         flag_l = ArgsFinder(l, "-l");
+    }
+
+    broken_stuff: {
+        int num_args=1;
+
+        if(flag_a==flag_l){
+            if(flag_a!=-1)
+                num_args = 2;
+            else 
+                num_args = 1;
+        }
+        else{
+            if(flag_a!=-1)
+                num_args++;
+            if(flag_l!=-1)
+                num_args++;
+        }
+
+        if(num_args==l->size)
+            StringVectorAdd(l, ".");
     }
 
     for(int ind_name=1;ind_name<l->size;ind_name++){
