@@ -19,8 +19,40 @@ int HistoryPrint(int cnt, history *h){
 }
 
 void addToHis(char* str, history *h){
-    
+    if(h->his[(h->index)%20]!=NULL)
+        free(h->his[(h->index)%20]);
     h->his[(h->index)%20] = (char*)malloc(2*strlen(str)*sizeof(char));
     strcpy(h->his[(h->index)%20], str);
     h->index++;
+    if(h->size<20)
+    h->size++;
+}
+
+void HistoryWriteToFile(history *h){
+    FILE *out = fopen("history_storage.txt", "w");
+
+    fprintf(out, "%d\n", h->index);
+    fprintf(out, "%d\n", h->size);
+
+    for(int i=0;i<h->size;i++){
+        fprintf(out, "%s\n", h->his[i]);
+    }
+
+    fclose(out);
+}
+
+void HistoryReadFromFile(history *h){
+    FILE *in = fopen("history_storage.txt", "r");
+
+    fscanf(in, "%d\n", h->index);
+    fscanf(in, "%d\n", h->size);
+
+    for(int i=0;i<h->size;i++){
+        char temp[1000];
+        fscanf(in, "%s\n", temp);
+        h->his[i] = (char*)malloc(2*strlen(temp)*sizeof(char));
+        strcpy(h->his[i], temp);
+    }
+
+    fclose(in);
 }

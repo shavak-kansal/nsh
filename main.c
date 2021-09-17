@@ -60,7 +60,8 @@ int main(){
     gethostname(systemname, 100);
     history curr_history;
     curr_history.index=0;
-
+    curr_history.size=0;
+    HistoryReadFromFile(&curr_history);
     //printf("%d\n", getpid());
     while(1){
         StringVector CommandList;
@@ -80,10 +81,11 @@ int main(){
         InputSanitize(input, &CommandList, ";");
         free(input);
 
-        for(int i=0;i<CommandList.size;i++)
-            addToHis(CommandList.list[i], &curr_history);
+        //for(int i=0;i<CommandList.size;i++)
+        //    addToHis(CommandList.list[i], &curr_history);
 
         for(int i=0;i<CommandList.size;i++){
+            addToHis(CommandList.list[i], &curr_history);
             StringVector commandBreakdown;
             StringVectorInit(&commandBreakdown);
             InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
@@ -93,6 +95,10 @@ int main(){
                     HistoryPrint(-1, &curr_history);
                 else
                     HistoryPrint(commandBreakdown.list[1][0]-'0', &curr_history);
+            }
+            else if(!strcmp(commandBreakdown.list[0], "exit")){
+                HistoryWriteToFile(&curr_history);
+                return 0;
             }
             else 
                 CommandHandler(&commandBreakdown);

@@ -6,9 +6,12 @@
 typedef struct _command_history{
     char* his[20];
     int index;
+    int size;
 } history;
 
 void addToHis(char* str, history *h);
 int print(int cnt, history *h);
+void HistoryWriteToFile(history *h);
+//void HistoryReadFromFile(history *h)
 
 #endif

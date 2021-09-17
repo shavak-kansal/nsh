@@ -1,0 +1,9 @@
+7
+7
+echo 3
+echo hello
+echo nightmare
+pwd
+pinfo
+history
+exit
