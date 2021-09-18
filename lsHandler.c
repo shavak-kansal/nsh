@@ -35,6 +35,11 @@ void lsHandler(StringVector *l){
     }
 
     for(int ind_name=1;ind_name<l->size;ind_name++){
+
+        if(!strcmp(l->list[ind_name], "~")){
+            l->list[ind_name] = (char*)malloc(2*strlen(home_directory));
+            strcpy(l->list[ind_name], home_directory);
+        }
         int cnt;
         struct dirent** list;
         cnt = scandir(l->list[ind_name], &list, NULL, alphasort);
@@ -42,8 +47,18 @@ void lsHandler(StringVector *l){
         if((ind_name==flag_l)||(ind_name==flag_a))
             continue;
 
-        printf("%s :\n", l->list[ind_name]);
-        
+        int total = 0;
+
+        for(int i=0;i<cnt;i++){
+            struct stat filePerms;
+            char temp[1000];
+            sprintf(temp, "%s%s", l->list[ind_name], list[i]->d_name);
+            stat(temp, &filePerms);
+            total += filePerms.st_blocks;
+        }
+
+        printf("%s :\ntotal %d\n", l->list[ind_name], total/2);
+
         for(int i=0;i<cnt;i++){
             if(flag_a==-1){
                 if(list[i]->d_name[0]=='.')

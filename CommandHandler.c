@@ -5,17 +5,24 @@ strLink bgProcessList;
 
 void handler(){
     int status;
-    int pid = wait(&status);
+    int pid;
 
-    char *name = StrFindPid(&bgProcessList, pid);
-    char msg[20];
+    while((pid = waitpid(-1,&status, WNOHANG))>0){
+        //int pid = wait(&status);
 
-    if(status==0)
-        strcpy(msg, "normally");
-    else 
-        strcpy(msg, "abnormally");
-        
-    printf("%s with %d exited %s\n", name, pid, msg);
+        char *name = StrFindPid(&bgProcessList, pid);
+
+        if(name!=NULL){
+            char msg[20];
+
+            if(status==0)
+                strcpy(msg, "normally");
+            else 
+                strcpy(msg, "abnormally");
+                
+            printf("%s with %d exited %s\n", name, pid, msg);
+        }
+    }
 }
 void CommandHandler(StringVector *l){
 
@@ -81,7 +88,7 @@ void CommandHandler(StringVector *l){
     }
     else if(!strcmp(l->list[0], "pinfo")){
         if(l->size>1)
-            p_info(atoi(l->list[1][0]));
+            p_info(atoi(l->list[1]));
         else 
             p_info(-1);
     }

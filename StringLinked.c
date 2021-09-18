@@ -41,7 +41,7 @@ void strLinkRemove(strLink* list, strLinkNode *inst){
 char* StrFindPid(strLink *s, int pid){
     strLinkNode* start = s->head;
     
-    char* str1;
+    char* str1 = NULL;
 
     while(start!=s->tail){
         if(start->pid==pid){
