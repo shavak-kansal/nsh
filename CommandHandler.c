@@ -2,7 +2,7 @@
 #include "functions.h"
 
 strLink bgProcessList;
-
+char last_dir[300];
 void handler(){
     int status;
     int pid;
@@ -45,25 +45,21 @@ void CommandHandler(StringVector *l){
             return;
         else if(!strcmp(l->list[1], "~"))
             ret = chdir(home_directory);
+        else if(!strcmp(l->list[1], "-"))
+            ret = chdir(last_dir);
         else 
             ret = chdir(l->list[1]);
         
         if(ret==-1)
             perror("Error with cd ");
-        
+        else 
+            strcpy(last_dir,curr_directory);        
         getcwd(curr_directory, 100);
-
-        // if(!strcmp(home_directory, curr_directory))
-        //     strcpy(curr_directory, "~");
 
     }
 
     else if(!strcmp(l->list[0],"pwd")){
     
-        // if(curr_directory[0]!='~')
-        //     printf("%s\n", curr_directory);
-        // else 
-        //     printf("%s\n", home_directory);
         char *msg = pwd();
         printf("%s\n", msg);
         free(msg);

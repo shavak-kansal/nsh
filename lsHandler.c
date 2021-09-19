@@ -14,7 +14,7 @@ void lsHandler(StringVector *l){
         flag_l = ArgsFinder(l, "-l");
     }
 
-    broken_stuff: {
+    /* broken_stuff: {
         int num_args=1;
 
         if(flag_a==flag_l){
@@ -32,14 +32,25 @@ void lsHandler(StringVector *l){
 
         if(num_args==l->size)
             StringVectorAdd(l, ".");
+    } */
+
+    int num_paths = 0;
+
+    for(int i=0;i<l->size;i++){
+        if(((!strcmp("-la", l->list[i]))||(!strcmp("-al", l->list[i]))||(!strcmp("-l", l->list[i]))||(!strcmp("-a", l->list[i]))||(!strcmp("ls", l->list[i]))))
+            continue;
+        else 
+            num_paths++;
     }
 
-    for(int ind_name=1;ind_name<l->size;ind_name++){
+    if(num_paths==0)
+        StringVectorAdd(l , ".");
 
-        // if(!strcmp(l->list[ind_name], "~")){
-        //     l->list[ind_name] = (char*)malloc(2*strlen(home_directory));
-        //     strcpy(l->list[ind_name], home_directory);
-        // }
+    for(int ind_name=1;ind_name<l->size;ind_name++){
+        int i = ind_name;
+
+        if(((!strcmp("-la", l->list[i]))||(!strcmp("-al", l->list[i]))||(!strcmp("-l", l->list[i]))||(!strcmp("-a", l->list[i]))||(!strcmp("ls", l->list[i]))))
+            continue;
 
         if(l->list[ind_name][0]=='~'){
             char temp[1000];
@@ -75,7 +86,7 @@ void lsHandler(StringVector *l){
             if(flag_l!=-1){
                 struct stat filePerms;
                 char temp[1000];
-                sprintf(temp, "%s%s", l->list[ind_name], list[i]->d_name);
+                sprintf(temp, "%s/%s", l->list[ind_name], list[i]->d_name);
                 stat(temp, &filePerms);
                 printf( (S_ISDIR(filePerms.st_mode)) ? "d" : "-");
                 printf( (filePerms.st_mode & S_IRUSR) ? "r" : "-");
@@ -88,12 +99,20 @@ void lsHandler(StringVector *l){
                 printf( (filePerms.st_mode & S_IWOTH) ? "w" : "-");
                 printf( (filePerms.st_mode & S_IXOTH) ? "x" : "-");
                 printf(" ");
+
                 struct tm *timeptr;
                 timeptr =  localtime(&(filePerms.st_mtime));
                 char* time = (char*)malloc(100*sizeof(char));
-                strftime(time, 100,"%b %d %l:%M ",timeptr);
-                printf("%lu\t%s\t%s\t%ld\t%s", filePerms.st_nlink, getpwuid(filePerms.st_uid)->pw_name, getgrgid(filePerms.st_gid)->gr_name, filePerms.st_size, time);
 
+                if(timeptr->tm_sec<15780000){    
+                    strftime(time, 100,"%b %d %l:%M ",timeptr);
+                    printf("%lu\t%s\t%s\t%zu\t%s", filePerms.st_nlink, getpwuid(filePerms.st_uid)->pw_name, getgrgid(filePerms.st_gid)->gr_name, filePerms.st_size, time);
+                }
+                else {
+                    strftime(time, 100,"%b %d %Y ",timeptr);
+                    printf("%lu\t%s\t%s\t%zu\t%s", filePerms.st_nlink, getpwuid(filePerms.st_uid)->pw_name, getgrgid(filePerms.st_gid)->gr_name, filePerms.st_size, time);                    
+                }
+                free(time);
             }
             printf("%s\n", list[i]->d_name);
         }
