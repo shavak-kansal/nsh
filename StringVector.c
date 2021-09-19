@@ -20,6 +20,13 @@ void StringVectorAdd(StringVector* LS, char* str){
     LS->size++;
 }
 
+void StringVectorReplace(StringVector* l, int index, char *str){
+    free(l->list[index]);
+
+    l->list[index] = (char*)malloc(2*strlen(str));
+    strcpy(l->list[index], str);
+}
+
 void StringVectorInit(StringVector* LS){
     LS->maxSize = 2;
     LS->list = (char**)malloc(LS->maxSize*sizeof(char*));

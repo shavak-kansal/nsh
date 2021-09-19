@@ -1,6 +1,12 @@
-5
+11
 cd ..
 cd Document
 cd Documents
 cd osn-shell
+exit
+ls -l
+ls -l .
+ls ~
+ls -l ~
+ls ~
 exit

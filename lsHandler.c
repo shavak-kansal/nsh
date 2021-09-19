@@ -36,10 +36,18 @@ void lsHandler(StringVector *l){
 
     for(int ind_name=1;ind_name<l->size;ind_name++){
 
-        if(!strcmp(l->list[ind_name], "~")){
-            l->list[ind_name] = (char*)malloc(2*strlen(home_directory));
-            strcpy(l->list[ind_name], home_directory);
-        }
+        // if(!strcmp(l->list[ind_name], "~")){
+        //     l->list[ind_name] = (char*)malloc(2*strlen(home_directory));
+        //     strcpy(l->list[ind_name], home_directory);
+        // }
+
+        if(l->list[ind_name][0]=='~'){
+            char temp[1000];
+            temp[0] = 0;
+            strcat(temp, home_directory);
+            strcat(temp, (l->list[ind_name]+1));
+            StringVectorReplace(l, ind_name, temp);
+        }           
         int cnt;
         struct dirent** list;
         cnt = scandir(l->list[ind_name], &list, NULL, alphasort);
@@ -47,7 +55,7 @@ void lsHandler(StringVector *l){
         if((ind_name==flag_l)||(ind_name==flag_a))
             continue;
 
-        int total = 0;
+        long long total = 0;
 
         for(int i=0;i<cnt;i++){
             struct stat filePerms;
@@ -57,7 +65,7 @@ void lsHandler(StringVector *l){
             total += filePerms.st_blocks;
         }
 
-        printf("%s :\ntotal %d\n", l->list[ind_name], total/2);
+        printf("%s :\ntotal %lld\n", l->list[ind_name], total/2);
 
         for(int i=0;i<cnt;i++){
             if(flag_a==-1){
