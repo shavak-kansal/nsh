@@ -1,6 +1,9 @@
 #include "utils.h"
 #include "functions.h"
 
+extern char *username;
+extern char *systemname;
+
 strLink bgProcessList;
 char last_dir[300];
 void handler(){
@@ -21,6 +24,11 @@ void handler(){
                 strcpy(msg, "abnormally");
                 
             printf("%s with %d exited %s\n", name, pid, msg);
+            char *msg1;
+            msg1 = pwd();
+            printf("<%s@%s:%s>", username, systemname, msg1);
+            free(msg1);
+            fflush(stdout);
         }
     }
 }

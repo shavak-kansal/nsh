@@ -1,0 +1,1 @@
+mainmake: gcc *.c -o bsh

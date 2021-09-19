@@ -9,6 +9,11 @@ void p_info(pid_t pid){
     sprintf(fileAdd, "/proc/%d/stat",pid);
 
     FILE *procStat = fopen(fileAdd, "r");
+
+    if(procStat == NULL){
+        printf("Process doesn't exist:");
+        return;
+    }
     pid_t pgrp, tpgid;
     char pidNo[40], random[100], state[10]; 
     fscanf(procStat, "%s %s %s %s %d %s %s %d", pidNo, random, state, random, &pgrp, random, random, &tpgid);

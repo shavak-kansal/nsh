@@ -5,6 +5,8 @@ char *curr_directory;
 char *home_directory;
 char *last_directory;
 history curr_history;
+char *username;
+char *systemname;
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -50,8 +52,8 @@ int InputSanitize(char* input, StringVector* l, char* delim){
 
 int main(){
     strLinkInit(&bgProcessList);
-    char *username = (char*)malloc(400*sizeof(char));
-    char *systemname = (char*)malloc(400*sizeof(char));
+    username = (char*)malloc(400*sizeof(char));
+    systemname = (char*)malloc(400*sizeof(char));
     curr_directory = (char*)malloc(400*sizeof(char));
     home_directory = (char*)malloc(400*sizeof(char));
     last_directory = (char*)malloc(400*sizeof(char));
@@ -67,6 +69,11 @@ int main(){
     HistoryReadFromFile(&curr_history);
     //printf("%d\n", getpid());
     while(1){
+            prompt();
+        }        
+}
+
+void prompt(){
         StringVector CommandList;
         StringVectorInit(&CommandList);
         
@@ -103,13 +110,11 @@ int main(){
             }
             else if(!strcmp(commandBreakdown.list[0], "exit")){
                 HistoryWriteToFile(&curr_history);
-                return 0;
+                return;
             }
             else 
                 CommandHandler(&commandBreakdown);
             
             StringVectorErase(&commandBreakdown);
-        }        
-    }
+        }
 }
-
