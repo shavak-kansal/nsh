@@ -1,4 +1,4 @@
-11
+19
 cd ..
 cd Document
 cd Documents
@@ -9,4 +9,12 @@ ls -l .
 ls ~
 ls -l ~
 ls ~
+exit
+vim &
+echo hello
+exit
+gedit &
+echo hello
+vim &
+exit 
 exit

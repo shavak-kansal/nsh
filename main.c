@@ -7,6 +7,7 @@ char *last_directory;
 history curr_history;
 char *username;
 char *systemname;
+
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -50,6 +51,97 @@ int InputSanitize(char* input, StringVector* l, char* delim){
     return l->size;
 }
 
+void die(const char *s) {
+    perror(s);
+    exit(1);
+}
+
+struct termios orig_termios;
+
+void disableRawMode() {
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+        die("tcsetattr");
+}
+
+
+void enableRawMode() {
+    if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) die("tcgetattr");
+    atexit(disableRawMode);
+    struct termios raw = orig_termios;
+    raw.c_lflag &= ~(ICANON | ECHO);
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
+}
+
+
+char* InputHandler() {
+    //char* his[4] = {"monkay", "brute", "juice", "filler"};
+
+    char *inp = malloc(sizeof(char) * 100);
+    char c;
+    while (1) {
+        setbuf(stdout, NULL);
+        enableRawMode();
+        memset(inp, '\0', 100);
+        int index = curr_history.size;
+        int pt = 0;
+        while (read(STDIN_FILENO, &c, 1) == 1) {
+            if (iscntrl(c)) {
+                if (c == 10) break;
+                else if (c == 27) {
+                    index--;
+                    printf("%s", curr_history.his[index]);
+                    char d;
+                    while (read(STDIN_FILENO, &d, 1) == 1) { // length of escape code
+                        if(d == 32){
+                            printf(" ");
+                            for(int i=0;i<strlen(curr_history.his[index]);i++)
+                                inp[pt++] = curr_history.his[index][i];
+
+                            inp[pt++] = ' ';
+                            
+                            break;    
+                        }
+                        else if(d==27){
+                            for(int i=0;i<strlen(curr_history.his[index]);i++)
+                                printf("\b \b");
+
+                            if(index>0)
+                                index--;
+                            
+                            printf("%s", curr_history.his[index]);
+                        }
+                    }
+                } else if (c == 127) { // backspace
+                    if (pt > 0) {
+                        if (inp[pt-1] == 9) {
+                            for (int i = 0; i < 7; i++) {
+                                printf("\b");
+                            }
+                        }
+                        inp[--pt] = '\0';
+                        printf("\b \b");
+                    }
+                } else if (c == 9) { // TAB character
+                    inp[pt++] = c;
+                    for (int i = 0; i < 8; i++) { // TABS should be 8 spaces
+                        printf(" ");
+                    }
+                } else if (c == 4) {
+                    exit(0);
+                } else {
+                    printf("%d\n", c);
+                }
+            } else {
+                inp[pt++] = c;
+                printf("%c", c);
+            }
+        }
+        disableRawMode();
+
+        return inp;
+    }
+}
+
 int main(){
     strLinkInit(&bgProcessList);
     username = (char*)malloc(400*sizeof(char));
@@ -82,8 +174,15 @@ void prompt(){
         printf("<%s@%s:%s>", username, systemname, msg1);
         free(msg1);
 
-        char* input = (char*)malloc(4000);
-        fgets(input, 4000, stdin);
+        char* input = NULL/* (char*)malloc(4000) */;
+        //free(input);
+        //fgets(input, 4000, stdin);
+        input = InputHandler();
+        if(!strcmp(input,"")){
+            printf("\n");
+            return;
+        }
+        printf("\n");
         
         //if(input[strlen(input)-1]=='\n')
         //    input[strlen(input)-1]='\0';
@@ -110,7 +209,7 @@ void prompt(){
             }
             else if(!strcmp(commandBreakdown.list[0], "exit")){
                 HistoryWriteToFile(&curr_history);
-                return;
+                exit(0);
             }
             else 
                 CommandHandler(&commandBreakdown);
@@ -118,3 +217,4 @@ void prompt(){
             StringVectorErase(&commandBreakdown);
         }
 }
+

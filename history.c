@@ -64,6 +64,9 @@ void HistoryWriteToFile(history *h){
 void HistoryReadFromFile(history *h){
     FILE *in = fopen("history_storage.txt", "r");
 
+    if(in==NULL){
+        perror("Error opening history_storage.txt");
+    }
     fscanf(in, "%d\n", &h->size);
 
     for(int i=0;i<h->size;i++){

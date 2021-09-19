@@ -10,8 +10,7 @@ void handler(){
     int status;
     int pid;
 
-    while((pid = waitpid(-1,&status, WNOHANG))>0){
-        //int pid = wait(&status);
+    while((pid = waitpid(-1,&status, WNOHANG | WUNTRACED))>0){
 
         char *name = StrFindPid(&bgProcessList, pid);
 
@@ -110,6 +109,7 @@ void CommandHandler(StringVector *l){
             perror("Fork error");
         }
         else if(pid==0){
+            setpgid(0,0);
             if(dontwait){
                 free(l->list[index]);
                 l->list[index] = NULL;

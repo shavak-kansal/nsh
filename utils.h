@@ -19,6 +19,12 @@ extern char *home_directory;
 #include "StringLinked.h"
 #include "StringVector.h"
 #include "functions.h"
+#include <stdio.h>
+#include <termios.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <string.h>
 
 //#include "StringVector.c"
 //#include "ArgsFinder.c"
