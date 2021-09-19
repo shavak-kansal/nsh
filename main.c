@@ -4,6 +4,7 @@ extern strLink bgProcessList;
 char *curr_directory;
 char *home_directory;
 char *last_directory;
+history curr_history;
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -60,7 +61,7 @@ int main(){
     //printf("curr : %s home :%s\n",curr_directory, home_directory);
     getlogin_r(username, 100);
     gethostname(systemname, 100);
-    history curr_history;
+    
     HistoryInit(&curr_history);
 
     HistoryReadFromFile(&curr_history);

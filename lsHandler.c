@@ -43,9 +43,10 @@ void lsHandler(StringVector *l){
             num_paths++;
     }
 
-    if(num_paths==0)
+    if(num_paths==0){
         StringVectorAdd(l , ".");
-
+        num_paths++;
+    }
     for(int ind_name=1;ind_name<l->size;ind_name++){
         int i = ind_name;
 
