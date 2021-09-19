@@ -24,7 +24,7 @@ void p_info(pid_t pid){
     procStat = fopen(fileAdd, "r");
     fscanf(procStat, "%s", random);
 
-    printf("memory -- %s\n", random);
+    printf("memory -- %s\n Bytes", random);
     fclose(procStat);
     
     readlink("/proc/self/exe", random, 100);
