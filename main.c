@@ -219,7 +219,23 @@ void prompt(){
             addToHis(CommandList.list[i], &curr_history);
             StringVector commandBreakdown;
             StringVectorInit(&commandBreakdown);
+           
             InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
+
+            input = ArgsFinder(&commandBreakdown, "<");
+            int output = ArgsFinder(&commandBreakdown, ">");
+            if(input!=-1)
+                commandBreakdown.list[input] = 0;
+            if(output!=-1)
+                commandBreakdown.list[output] = 0;
+            if(input!=-1){
+                fclose(0);
+                fopen(CommandList.list[input+1], "r");
+            }
+            if(output!=-1){
+                fclose(1);
+                fopen(CommandList.list[output+1], "w");
+            }
 
             if(!strcmp(commandBreakdown.list[0], "history")){
                 if(commandBreakdown.size==1)
@@ -232,10 +248,18 @@ void prompt(){
                 exit(0);
             }
             else{
-                
                 CommandHandler(&commandBreakdown);
             }
             StringVectorErase(&commandBreakdown);
+            
+            if(input!=-1){
+                fclose(0);
+                fopen(stdin, "r");
+            }
+            if(output!=-1){
+                fclose(1);
+                fopen(stdout, "w");
+            }
         }
 }
 
