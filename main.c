@@ -166,6 +166,26 @@ int main(){
 }
 
 void prompt(){
+        int pid;
+        int status;
+        while((pid = waitpid(-1,&status, WNOHANG | WUNTRACED))>0){
+
+            char *name = StrFindPid(&bgProcessList, pid);
+
+            if(name!=NULL){
+                char msg[20];
+
+                if(status==0)
+                    strcpy(msg, "normally");
+                else 
+                    strcpy(msg, "abnormally");
+                    
+                printf("%s with %d exited %s\n", name, pid, msg);
+                char *msg1;
+                fflush(stdout);
+            }
+        }
+
         StringVector CommandList;
         StringVectorInit(&CommandList);
         
@@ -211,9 +231,10 @@ void prompt(){
                 HistoryWriteToFile(&curr_history);
                 exit(0);
             }
-            else 
+            else{
+                
                 CommandHandler(&commandBreakdown);
-            
+            }
             StringVectorErase(&commandBreakdown);
         }
 }

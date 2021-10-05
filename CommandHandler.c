@@ -6,6 +6,7 @@ extern char *systemname;
 
 strLink bgProcessList;
 char last_dir[300];
+
 void handler(){
     int status;
     int pid;
@@ -31,6 +32,7 @@ void handler(){
         }
     }
 }
+
 void CommandHandler(StringVector *l){
 
     if(!strcmp(l->list[0],"echo")){
@@ -97,11 +99,11 @@ void CommandHandler(StringVector *l){
     }
     else{
         
-        int dontwait = 0;
+        int bgflag = 0;
         int index;
         
         if((index=ArgsFinder(l, "&"))!=-1)
-            dontwait = 1;
+            bgflag = 1;
 
         int pid = fork();
         
@@ -109,8 +111,10 @@ void CommandHandler(StringVector *l){
             perror("Fork error");
         }
         else if(pid==0){
-            setpgid(0,0);
-            if(dontwait){
+            if(bgflag)
+                setpgid(0,0);
+            
+            if(bgflag){
                 free(l->list[index]);
                 l->list[index] = NULL;
             }
@@ -124,13 +128,11 @@ void CommandHandler(StringVector *l){
         }
         else{
             
-            if(dontwait){
+            if(bgflag)
                 strLinkAdd(&bgProcessList, l->list[0], pid);
-                signal(SIGCHLD, handler);
-            }
-
-            if(!dontwait)
+            else 
                 wait(NULL);
+            //signal(SIGCHLD, handler);            
         }
     }
     
