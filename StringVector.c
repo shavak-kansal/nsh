@@ -33,7 +33,7 @@ void StringVectorInit(StringVector* LS){
     LS->size = 0;
     
     for(int i=LS->size;i<LS->maxSize;i++)
-            LS->list[i] = NULL;
+        LS->list[i] = NULL;
 }
 
 void StringVectorErase(StringVector* V){

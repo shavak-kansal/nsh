@@ -11,7 +11,8 @@ void pipingHandler(StringVector* list, int size){
         close(fd2[0]);
         dup2(fd2[1],1);
         close(fd2[1]);
-        execvp(list[0].list[0], list[0].list);
+        if(ImprovedCommandHandler(&(list[0]))==-1)
+            execvp(list[0].list[0], list[0].list);
     }
     else if(pid>0){
         fd1[0] = fd2[0];
@@ -30,7 +31,8 @@ void pipingHandler(StringVector* list, int size){
             dup2(fd2[1],1);
             close(fd2[1]);
 
-            execvp(list[i].list[0], list[i].list);
+            if(ImprovedCommandHandler(&(list[i]))==-1)
+                execvp(list[i].list[0], list[i].list);
         }
         else if(pid>0){
             close(fd1[0]);
@@ -45,8 +47,8 @@ void pipingHandler(StringVector* list, int size){
         dup2(fd1[0],0);
         close(fd1[0]);
         close(fd1[1]);
-
-        execvp(list[size-1].list[0], list[size-1].list);
+        if(ImprovedCommandHandler(&(list[0]))==-1)
+            execvp(list[size-1].list[0], list[size-1].list);
     }
     else if(pid>0){
         close(fd1[0]);
