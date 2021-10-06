@@ -46,6 +46,20 @@ void StringVectorErase(StringVector* V){
     V->maxSize = 0;
 }
 
+void StringVectorDelete(StringVector *vec, int index){
+    if(index >= vec->size)
+        return;
+
+    if(vec->list[index]!=NULL)
+        free(vec->list[index]);   
+
+    for(int i=index+1;i<vec->size;i++)
+        vec->list[i-1] = vec->list[i];
+
+    vec->size--;
+    return;
+}
+
 void StringVectorCopy(StringVector *src, StringVector *dst){
     for(int i=0;i<src->size;i++)
         StringVectorAdd(dst, src->list[i]);

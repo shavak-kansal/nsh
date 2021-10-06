@@ -97,6 +97,29 @@ void CommandHandler(StringVector *l){
         else 
             p_info(-1);
     }
+    else if(!strcmp(l->list[0], "test")){
+
+        StringVector list[4];
+
+        for(int i=0;i<4;i++)
+            StringVectorInit(&list[i]);
+
+        StringVectorAdd(&list[0], "ls");
+        StringVectorAdd(&list[0], "-l");
+        StringVectorAdd(&list[0], 0);
+
+        StringVectorAdd(&list[1], "awk");
+        StringVectorAdd(&list[1], "{print $1}");
+        StringVectorAdd(&list[1], 0);
+
+        StringVectorAdd(&list[2], "sort");
+        StringVectorAdd(&list[2], 0);
+
+        StringVectorAdd(&list[3], "uniq");
+        StringVectorAdd(&list[3],0);
+
+        pipingHandler(list, 4);
+    }
     else{
         
         int bgflag = 0;

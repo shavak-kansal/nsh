@@ -15,3 +15,5 @@ void StringVectorInit(StringVector* LS);
 void StringVectorCopy(StringVector *src, StringVector *dst);
 
 void StringVectorReplace(StringVector* l, int index, char *str);
+
+void StringVectorDelete(StringVector *vec, int index);

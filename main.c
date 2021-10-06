@@ -222,19 +222,26 @@ void prompt(){
            
             InputSanitize(CommandList.list[i], &commandBreakdown, " \t");
 
-            input = ArgsFinder(&commandBreakdown, "<");
+            int input = ArgsFinder(&commandBreakdown, "<");
             int output = ArgsFinder(&commandBreakdown, ">");
-            if(input!=-1)
-                commandBreakdown.list[input] = 0;
-            if(output!=-1)
-                commandBreakdown.list[output] = 0;
+
+            int inog;
+            int outog;
+
             if(input!=-1){
-                fclose(0);
-                fopen(CommandList.list[input+1], "r");
+                inog = dup(0);
+                //commandBreakdown.list[input] = 0;
+                StringVectorDelete(&commandBreakdown, input);
+                fopen(commandBreakdown.list[input+1], "r");
+                StringVectorDelete(&commandBreakdown, input);
             }
             if(output!=-1){
-                fclose(1);
-                fopen(CommandList.list[output+1], "w");
+                outog = dup(1);
+                close(1);
+                //commandBreakdown.list[output] = 0;
+                StringVectorDelete(&commandBreakdown, output);
+                fopen(commandBreakdown.list[output+1], "w");
+                StringVectorDelete(&commandBreakdown, output);
             }
 
             if(!strcmp(commandBreakdown.list[0], "history")){
@@ -247,18 +254,23 @@ void prompt(){
                 HistoryWriteToFile(&curr_history);
                 exit(0);
             }
-            else{
+            // else if(ArgsFinder(commandBreakdown, "|")!=-1){
+
+            // }
+            else {
                 CommandHandler(&commandBreakdown);
             }
             StringVectorErase(&commandBreakdown);
             
             if(input!=-1){
-                fclose(0);
-                fopen(stdin, "r");
+                close(0);
+                dup2(inog, 0);
+                //open(stdin, "r");
             }
             if(output!=-1){
-                fclose(1);
-                fopen(stdout, "w");
+                close(1);
+                //open(stdout, "w");
+                dup2(outog, 1);
             }
         }
 }

@@ -1,20 +1,21 @@
-19
-cd ..
-cd Document
-cd Documents
-cd osn-shell
-exit
-ls -l
-ls -l .
-ls ~
-ls -l ~
-ls ~
-exit
-vim &
-echo hello
-exit
-gedit &
+20
 echo hello
 vim &
 exit 
+exit
+echo hello > output.txt
+exit
+echo hello > output.txt
+exit
+echo hello > output.txt
+exit
+echo hello > output.txt
+exit
+echo helloworld > output.txt
+exit
+test
+echo hello
+exit
+test
+echo hello
 exit
