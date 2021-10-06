@@ -181,7 +181,7 @@ void prompt(){
                     strcpy(msg, "abnormally");
                     
                 printf("%s with %d exited %s\n", name, pid, msg);
-                char *msg1;
+                free(name);
                 fflush(stdout);
             }
         }

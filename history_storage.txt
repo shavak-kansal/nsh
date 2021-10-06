@@ -1,21 +1,21 @@
 20
-echo hello
-vim &
-exit 
-exit
-echo hello > output.txt
-exit
-echo hello > output.txt
-exit
-echo hello > output.txt
-exit
-echo hello > output.txt
-exit
-echo helloworld > output.txt
-exit
 test
 echo hello
 exit
-test
+gedit &
+sleep 5 &
+sleep 10 &
+eixt
+exit
+sleep 5 &
+sleep 1
 echo hello
+sleep 5
+exit
+sleep 5 &
+echo hello
+exit
+sleep 5 &
+echo hello
+history
 exit
