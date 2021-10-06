@@ -12,8 +12,52 @@ void strLinkInit(strLink* list){
     list->tail->back=list->head;
 }
 
+void bgJobAdder(strLink* list, char* name, int pid, int jobNum){
+    strLinkNode *new = (strLinkNode*)malloc(sizeof(strLinkNode));
+    new->pid = pid;
+    new->str = (char*)malloc(2*strlen(name)*sizeof(char));
+    new->jobNum = jobNum;
+    strcpy(new->str, name);
+
+    strLinkNode *temp = list->head;
+
+    while((temp->next!=list->tail)&&(strcmp(temp->next->str, name)<=0))
+        temp = temp->next;
+
+    temp->next->back = new;
+    new->next=temp->next;
+    new->back=temp;
+    temp->next = new;
+}
+
+char* bgJobRemove(strLink* list, int pid){
+    strLinkNode *temp = list->head;
+    while(temp->next!=list->tail){
+        if(temp->next->pid==pid){
+
+            strLinkNode *temp2 = list->head;
+            while(temp2->next!=list->tail){
+                
+                if(temp2->next->jobNum>temp->next->jobNum)
+                    temp2->next->jobNum--;
+
+                temp2 = temp2->next;
+            }
+            temp->next->back->next = temp->next->next;
+            temp->next->next->back = temp->next->back;
+
+            char *str = malloc(2*strlen(temp->next->str)*sizeof(char));
+            strcpy(str, temp->next->str);
+
+            free(temp->next->str);
+            free(temp->next);
+            return str;
+        }
+        temp = temp->next;
+    }
+}
+
 void strLinkAdd(strLink* list, char *str, int pidNum){
-    //strLinkNode *temp = list->tail->back;
 
     strLinkNode *new = (strLinkNode*)malloc(sizeof(strLinkNode));
     new->pid = pidNum;

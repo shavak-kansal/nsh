@@ -1,21 +1,21 @@
 20
-test
+sleep 30 &
+sleep 20 &
+jobs
 echo hello
+sleep 10
 exit
-gedit &
-sleep 5 &
-sleep 10 &
-eixt
+sleep 30 &
+sleep 20 &
+jobs
 exit
-sleep 5 &
-sleep 1
-echo hello
-sleep 5
+sleep 30 &
+sleep 20 &
+jobs
+jobs -r
+jobs -s
 exit
-sleep 5 &
-echo hello
-exit
-sleep 5 &
-echo hello
-history
+sleep 20 & 
+sleep 30 & 
+jobs
 exit

@@ -3,6 +3,7 @@
 
 extern char *username;
 extern char *systemname;
+extern int maxJobNum;
 
 strLink bgProcessList;
 char last_dir[300];
@@ -33,9 +34,54 @@ void handler(){
     }
 }
 
+char pid_state(int pid){
+    char* fileAdd = (char*)malloc(200);
+    sprintf(fileAdd, "/proc/%d/stat",pid);
+
+    FILE *procStat = fopen(fileAdd, "r");
+    char state[10]; 
+    fscanf(procStat, "%s %s %s", state, state, state);
+
+    return state[0];
+}
 void CommandHandler(StringVector *l){
 
-    if(!strcmp(l->list[0],"echo")){
+    if(!strcmp(l->list[0],"jobs")){
+
+        int rFlag = ArgsFinder(l, "-r");
+        int sFlag = ArgsFinder(l, "-s");
+        
+        strLinkNode* step = bgProcessList.head;
+
+        if((rFlag==-1)&&(sFlag==-1))
+            while(step->next!=bgProcessList.tail){
+                step = step->next;
+                char state = pid_state(step->pid);
+                char msg[30];
+
+                if(state=='R')
+                    strcpy(msg, "Running");
+                else 
+                    strcpy(msg, "Stopped");
+                printf("[%d] %s %s [%d]\n", step->jobNum,msg ,step->str, step->pid);
+            }
+        else if(rFlag!=-1){
+            while(step->next!=bgProcessList.tail){
+                step = step->next;
+                if(pid_state(step->pid)=='R')
+                    printf("Running [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
+            }
+        }
+        else if(sFlag!=-1){
+            while(step->next!=bgProcessList.tail){
+                step = step->next;
+                char state = pid_state(step->pid);
+                if(pid_state(step->pid)=='S')
+                    printf("Stopped [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
+            }
+        }
+    }
+    else if(!strcmp(l->list[0],"echo")){
 
         int i=1;
         
@@ -151,10 +197,12 @@ void CommandHandler(StringVector *l){
         }
         else{
             
-            if(bgflag)
-                strLinkAdd(&bgProcessList, l->list[0], pid);
+            if(bgflag){
+                bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);//strLinkAdd(&bgProcessList, l->list[0], pid);
+                maxJobNum++;
+            }
             else 
-                wait(NULL);
+                waitpid(pid, NULL, 0);
             //signal(SIGCHLD, handler);            
         }
     }

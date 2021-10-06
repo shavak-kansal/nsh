@@ -1,6 +1,7 @@
 #include "utils.h"
 
 extern strLink bgProcessList;
+int maxJobNum = 1;
 char *curr_directory;
 char *home_directory;
 char *last_directory;
@@ -170,8 +171,9 @@ void prompt(){
         int status;
         while((pid = waitpid(-1,&status, WNOHANG | WUNTRACED))>0){
 
-            char *name = StrFindPid(&bgProcessList, pid);
+            //char *name = StrFindPid(&bgProcessList, pid);
 
+            char* name = bgJobRemove(&bgProcessList,pid);
             if(name!=NULL){
                 char msg[20];
 
@@ -183,6 +185,7 @@ void prompt(){
                 printf("%s with %d exited %s\n", name, pid, msg);
                 free(name);
                 fflush(stdout);
+                maxJobNum--;
             }
         }
 
