@@ -121,7 +121,7 @@ int ImprovedCommandHandler(StringVector *l){
                         char state = pid_state(step->pid);
                         char msg[30];
 
-                        if(state=='R')
+                        if(state!='T')
                             strcpy(msg, "Running");
                         else 
                             strcpy(msg, "Stopped");

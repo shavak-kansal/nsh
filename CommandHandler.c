@@ -60,7 +60,7 @@ void CommandHandler(StringVector *l){
                 char state = pid_state(step->pid);
                 char msg[30];
 
-                if(state=='R')
+                if(state!='T')
                     strcpy(msg, "Running");
                 else 
                     strcpy(msg, "Stopped");
@@ -234,30 +234,36 @@ void CommandHandler(StringVector *l){
             perror("Fork error");
         }
         else if(pid==0){
-            if(bgflag)
-                setpgid(0,0);
-            
+                
             if(bgflag){
+                setpgid(0,0);
                 free(l->list[index]);
                 l->list[index] = NULL;
             }
-            else 
+            else {
                 StringVectorAdd(l, NULL);
-
+                signal(SIGINT, SIG_DFL);
+                signal(SIGTSTP, SIG_DFL);
+            }
             if(execvp(l->list[0], l->list)<0){
                 perror("Execvp error ");
             }
             _exit(0);
         }
         else{
+            //bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);
             
             if(bgflag){
                 bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);//strLinkAdd(&bgProcessList, l->list[0], pid);
                 maxJobNum++;
             }
             else{ 
-            	foregroundPid = pid;
-                waitpid(pid, NULL, 0);
+            	tcsetpgrp(0, pid);
+                signal(SIGTTOU, SIG_IGN);
+                waitpid(pid, NULL, WUNTRACED);
+                bgJobRemove(&bgProcessList,pid);
+                signal(SIGTTOU, SIG_DFL);
+                tcsetpgrp(0, getpgrp());
             }
             //signal(SIGCHLD, handler);            
         }

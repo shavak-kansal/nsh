@@ -146,26 +146,29 @@ char* InputHandler() {
         return inp;
     }
 }
-void HandleSig1(){
+void control_z(){
+    printf("%d", foregroundPid);
 	kill(foregroundPid, SIGTSTP);
 	return;
 }
 
-void HandleSig2(){
+void control_c(){
+    printf("Control c %d", foregroundPid);
 	if(foregroundPid!=-1){
 	kill(foregroundPid, SIGINT);
 	}
 }
 
-void HandleSig3(){
+void control_d(){
+    printf("Exiting shell");
 	_exit(0);
 }
 
 
 int main(){
-    signal(SIGINT, HandleSig2);
-    signal(SIGTSTP, HandleSig1);
-    signal(SIGCHLD, HandleSig3);
+    signal(SIGTSTP, SIG_IGN);
+    signal(SIGINT, SIG_IGN);
+    //signal(SIGCHLD, control_d);
 
     strLinkInit(&bgProcessList);
     username = (char*)malloc(400*sizeof(char));
