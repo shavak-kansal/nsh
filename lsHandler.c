@@ -1,6 +1,15 @@
 #include "utils.h"
 
-void lsHandler(StringVector *l){
+void lsHandler(StringVector *ll){
+    StringVector *l = (StringVector *)malloc(sizeof(StringVector));
+    StringVectorInit(l);
+    //StringVectorCopy(ll, l);
+
+    for(int i=0;i<ll->size;i++){
+        if(ll->list[i]!=NULL){
+            StringVectorAdd(l, ll->list[i]);
+        }
+    }
     int ind_name=1;
 
     int flag_a = 0;
@@ -14,25 +23,6 @@ void lsHandler(StringVector *l){
         flag_l = ArgsFinder(l, "-l");
     }
 
-    /* broken_stuff: {
-        int num_args=1;
-
-        if(flag_a==flag_l){
-            if(flag_a!=-1)
-                num_args = 2;
-            else 
-                num_args = 1;
-        }
-        else{
-            if(flag_a!=-1)
-                num_args++;
-            if(flag_l!=-1)
-                num_args++;
-        }
-
-        if(num_args==l->size)
-            StringVectorAdd(l, ".");
-    } */
 
     int num_paths = 0;
 
@@ -77,6 +67,8 @@ void lsHandler(StringVector *l){
             total += filePerms.st_blocks;
         }
 
+        //printf("hello");
+        write(1, "hello", 5);
         printf("%s :\ntotal %lld\n", l->list[ind_name], total/2);
 
         for(int i=0;i<cnt;i++){

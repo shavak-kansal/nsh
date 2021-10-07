@@ -7,9 +7,23 @@ extern int maxJobNum;
 
 extern strLink bgProcessList;
 
-int ImprovedCommandHandler(StringVector *l){
-
-    if(!strcmp(l->list[0],"jobs")){
+int compareStr(char *str1 , char *str2){
+    for(int i=0;i<strlen(str2);i++){
+        if(str1[i]!=str2[i]){
+            return 0;
+        }
+    }
+    return 1;
+}
+int ImprovedCommandHandler(StringVector *ll){
+    StringVector *l = (StringVector*)malloc(sizeof(StringVector));
+    StringVectorInit(l);
+    // StringVectorCopy(ll, l);
+    
+    StringVectorAdd(l, "ls");
+    StringVectorAdd(l, "-l");
+    StringVectorAdd(l, 0);
+    if(compareStr(l->list[0],"jobs")){
 
         int rFlag = ArgsFinder(l, "-r");
         int sFlag = ArgsFinder(l, "-s");
@@ -44,9 +58,10 @@ int ImprovedCommandHandler(StringVector *l){
             }
         }
 
-        exit(0);
+        _exit(0);
     }
-    else if(!strcmp(l->list[0],"echo")){
+    
+    else if(compareStr(l->list[0],"echo")){
 
         int i=1;
         
@@ -57,37 +72,36 @@ int ImprovedCommandHandler(StringVector *l){
 
         printf("\n");
 
-        exit(0);
+        _exit(0);
     }
     
-    else if(!strcmp(l->list[0],"pwd")){
+    else if(compareStr(l->list[0],"pwd")){
     
         char *msg = pwd();
         printf("%s\n", msg);
         free(msg);
-        exit(0);
+        _exit(0);
     }
 
-    else if(!strcmp(l->list[0], "ls")){
+    else if(compareStr(l->list[0], "ls")){
         lsHandler(l);
-        exit(0);
     }
     
-    else if(!strcmp(l->list[0], "pinfo")){
+    else if(compareStr(l->list[0], "pinfo")){
         if(l->size>1)
             p_info(atoi(l->list[1]));
         else 
             p_info(-1);
 
-        exit(0);
+        _exit(0);
     }
 
-    else if(!strcmp(l->list[0], "repeat")){    
+    else if(compareStr(l->list[0], "repeat")){    
         int count = atoi(l->list[1]);
 
         for(int i=0;i<count;i++){
 
-            if(!strcmp(l->list[2],"jobs")){
+            if(compareStr(l->list[2],"jobs")){
                 int rFlag = ArgsFinder(l, "-r");
                 int sFlag = ArgsFinder(l, "-s");
                 
@@ -122,7 +136,7 @@ int ImprovedCommandHandler(StringVector *l){
                 }
 
             }
-            else if(!strcmp(l->list[2],"echo")){
+            else if(compareStr(l->list[2],"echo")){
 
                 int i=3;
                 
@@ -134,14 +148,14 @@ int ImprovedCommandHandler(StringVector *l){
                 printf("\n");
             }
         
-            else if(!strcmp(l->list[0],"pwd")){
+            else if(compareStr(l->list[0],"pwd")){
             
                 char *msg = pwd();
                 printf("%s\n", msg);
                 free(msg);
             }
 
-            else if(!strcmp(l->list[2], "ls")){
+            else if(compareStr(l->list[2], "ls")){
                 StringVector cpy;
                 StringVectorInit(&cpy);
 
@@ -153,8 +167,9 @@ int ImprovedCommandHandler(StringVector *l){
                 StringVectorErase(&cpy);
             }
         }
-        exit(0);    
+        _exit(0);    
     }
-    else return -1;
+    
+    else return 1;
     
 }

@@ -197,8 +197,8 @@ void prompt(){
         printf("<%s@%s:%s>", username, systemname, msg1);
         free(msg1);
 
-        char* input = NULL/* (char*)malloc(4000) */;
-        //free(input);
+        char* input = /* NULL  */(char*)malloc(4000) ;
+        free(input);
         //fgets(input, 4000, stdin);
         input = InputHandler();
         if(!strcmp(input,"")){
@@ -230,7 +230,7 @@ void prompt(){
 
             int inog;
             int outog;
-
+s
             if(input!=-1){
                 inog = dup(0);
                 //commandBreakdown.list[input] = 0;

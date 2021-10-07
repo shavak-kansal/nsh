@@ -1,21 +1,21 @@
 20
-sleep 30 &
-sleep 20 &
-jobs
-echo hello
-sleep 10
-exit
-sleep 30 &
-sleep 20 &
-jobs
-exit
-sleep 30 &
-sleep 20 &
-jobs
 jobs -r
 jobs -s
 exit
 sleep 20 & 
 sleep 30 & 
 jobs
+exit
+test
+exit
+test
+exit
+testg
+test
+exit 
+ls -l
+exit
+ls -l
+exit
+test
 exit
