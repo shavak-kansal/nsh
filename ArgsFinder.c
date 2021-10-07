@@ -13,10 +13,12 @@ int ArgsFinder(StringVector* l, char *arg){
 
 int betterArgsFinder(StringVector* l, char *arg, int start){
 
+    int cnt = 0;
+
     for(int i=start;i<l->size;i++){
         if(!strcmp(l->list[i], arg))
-            return i;
+            cnt++;
     }
 
-    return -1;
+    return cnt;
 }

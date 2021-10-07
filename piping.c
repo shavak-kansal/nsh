@@ -43,6 +43,7 @@ void pipingHandler(StringVector* list, int size){
             dup2(fd2[1],1);
             close(fd2[1]);
 
+            StringVectorAdd(&list[0], NULL);
             execvp(list[0].list[0], list[0].list);
         }
         else if(pid>0){
@@ -81,7 +82,7 @@ void pipingHandler(StringVector* list, int size){
                 dup2(fd2[1],1);
                 close(fd2[1]);
 
-
+                StringVectorAdd(&list[i], NULL);
                 execvp(list[i].list[0], list[i].list);
                 _exit(0);
             }
@@ -118,12 +119,13 @@ void pipingHandler(StringVector* list, int size){
             }
         }
     }
-    if(boring(&(list[i]))==1){
+    if(boring(&(list[size-1]))==1){
         if((pid = fork())==0){
             dup2(fd1[0],0);
             close(fd1[0]);
             close(fd1[1]);
 
+            StringVectorAdd(&list[size-1], NULL);
             execvp(list[size-1].list[0], list[size-1].list);
         }
         else if(pid>0){
@@ -139,7 +141,7 @@ void pipingHandler(StringVector* list, int size){
             close(fd1[0]);
             close(fd1[1]);
 
-            ImprovedCommandHandler(&(list[i]));
+            ImprovedCommandHandler(&(list[size-1]));
             _exit(0);
         }
         else if(pid>0){
@@ -149,6 +151,6 @@ void pipingHandler(StringVector* list, int size){
             close(fd1[1]);
         }
     }
-    close(fd1[0]);
-    close(fd1[1]);
+    // close(fd1[0]);
+    // close(fd1[1]);
 }

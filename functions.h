@@ -4,6 +4,7 @@
 #include "utils.h"
 
 int ArgsFinder(StringVector* l, char *arg);
+int betterArgsFinder(StringVector* l, char *arg, int start);
 void CommandHandler(StringVector *l);
 void lsHandler(StringVector *l);
 void p_info(pid_t pid);

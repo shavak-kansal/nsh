@@ -1,13 +1,5 @@
 20
 exit
-sleep 20 & 
-sleep 30 & 
-jobs
-exit
-test
-exit
-test
-exit
 testg
 test
 exit 
@@ -18,4 +10,12 @@ exit
 test
 exit
 test
+exit
+test
+exit
+test
+exit
+cat < sample2.txt | wc -l > lines.txt
+exit
+cat < sample2.txt | wc -l > lines.txt
 exit

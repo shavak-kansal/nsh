@@ -235,15 +235,19 @@ void prompt(){
                 inog = dup(0);
                 //commandBreakdown.list[input] = 0;
                 StringVectorDelete(&commandBreakdown, input);
-                fopen(commandBreakdown.list[input+1], "r");
+                //fopen(commandBreakdown.list[input+1], "r");
+                int fd = open(commandBreakdown.list[input] , O_RDONLY);
+                dup2(fd, 0);
                 StringVectorDelete(&commandBreakdown, input);
             }
             if(output!=-1){
+                output = ArgsFinder(&commandBreakdown, ">");
                 outog = dup(1);
-                close(1);
                 //commandBreakdown.list[output] = 0;
                 StringVectorDelete(&commandBreakdown, output);
-                fopen(commandBreakdown.list[output+1], "w");
+                //fopen(commandBreakdown.list[output+1], "w");
+                int fd = open(commandBreakdown.list[output] , O_WRONLY);
+                dup2(fd, 1);
                 StringVectorDelete(&commandBreakdown, output);
             }
 
@@ -255,11 +259,29 @@ void prompt(){
             }
             else if(!strcmp(commandBreakdown.list[0], "exit")){
                 HistoryWriteToFile(&curr_history);
-                exit(0);
+                _exit(0);
             }
-            else if(ArgsFinder(&commandBreakdown, "|")!=-1){
-                int cnt = 0;
-                
+            else if(betterArgsFinder(&commandBreakdown, "|", 0)>0){
+                int cnt = betterArgsFinder(&commandBreakdown, "|", 0);
+
+                StringVector list[cnt+1];
+
+                for(int i=0;i<=cnt;i++)
+                    StringVectorInit(&list[i]);
+
+                int bleh = 0;
+                for(int i=0;i<commandBreakdown.size ;i++){
+                    if(!strcmp(commandBreakdown.list[i],"|"))
+                        bleh++;
+                    else 
+                        StringVectorAdd(&list[bleh], commandBreakdown.list[i]);
+                }
+
+                pipingHandler(list, cnt+1);
+
+                for(int i=0;i<cnt+1;i++){
+                    StringVectorErase(&list[i]);
+                }
             }
             else {
                 CommandHandler(&commandBreakdown);

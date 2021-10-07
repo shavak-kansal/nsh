@@ -32,6 +32,7 @@ void bgJobAdder(strLink* list, char* name, int pid, int jobNum){
 
 char* bgJobRemove(strLink* list, int pid){
     strLinkNode *temp = list->head;
+    
     while(temp->next!=list->tail){
         if(temp->next->pid==pid){
 
@@ -55,6 +56,8 @@ char* bgJobRemove(strLink* list, int pid){
         }
         temp = temp->next;
     }
+    
+    return NULL;
 }
 
 void strLinkAdd(strLink* list, char *str, int pidNum){

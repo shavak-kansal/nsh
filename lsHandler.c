@@ -1,6 +1,7 @@
 #include "utils.h"
 
 void lsHandler(StringVector *ll){
+    //l->size--;
     StringVector *l = (StringVector *)malloc(sizeof(StringVector));
     StringVectorInit(l);
     //StringVectorCopy(ll, l);
@@ -109,5 +110,8 @@ void lsHandler(StringVector *ll){
             printf("%s\n", list[i]->d_name);
         }
         printf("\n");
+
     }    
+    StringVectorErase(l);
+    free(l);
 }
