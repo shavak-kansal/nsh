@@ -22,5 +22,6 @@ char* StrFindPid(strLink *s, int pid);
 
 char* bgJobRemove(strLink* list, int pid);
 void bgJobAdder(strLink* list, char* name, int pid, int jobNum);
+int StrFindNum(strLink *s, int job);
 
 #endif

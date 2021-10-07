@@ -1,21 +1,21 @@
 20
+cat < sample2.txt | wc -l > lines.txt
 exit
-testg
-test
+cat < sample2.txt | wc -l > lines.txt
+exit
+sleep 15 &
+fg 1
+jobs
+sleep 10 &
+jobs
+fg 1
+exit
+sleep 20 &
+fg1
 exit 
-ls -l
+sleep 20 &
+fg 1
 exit
-ls -l
-exit
-test
-exit
-test
-exit
-test
-exit
-test
-exit
-cat < sample2.txt | wc -l > lines.txt
-exit
-cat < sample2.txt | wc -l > lines.txt
+sleep 20 &
+bg 1
 exit

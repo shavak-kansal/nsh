@@ -4,6 +4,7 @@
 extern char *username;
 extern char *systemname;
 extern int maxJobNum;
+extern int foregroundPid;
 
 strLink bgProcessList;
 char last_dir[300];
@@ -131,15 +132,31 @@ void CommandHandler(StringVector *l){
         for(int i=2;i<l->size;i++)
             StringVectorAdd(&l_r, l->list[i]);
 
-        for(int i=0;i<(atoi(l->list[1]));i++){
+        char *pain;
+        long num = strtol(l->list[1],&pain,10);
+        if (pain[0] != '\0')
+        {
+            printf("Enter a numerical value\n");
+            return;
+        }
+
+        for(int i=0;i<num;i++){
             CommandHandler(&l_r);  
         }
 
         StringVectorErase(&l_r);
     }
     else if(!strcmp(l->list[0], "pinfo")){
-        if(l->size>1)
-            p_info(atoi(l->list[1]));
+        if(l->size>1){
+            char *pain;
+            long num = strtol(l->list[1],&pain,10);
+            if (pain[0] != '\0')
+            {
+                printf("Enter a numerical value\n");
+                return;
+            }
+            p_info(num);
+        }
         else 
             p_info(-1);
     }
@@ -166,6 +183,43 @@ void CommandHandler(StringVector *l){
 
         pipingHandler(list, 4);
     }
+    else if(!strcmp(l->list[0], "sig")){
+        int jobNum = strtol(l->list[1], NULL, 10);
+        int sig = strtol(l->list[2], NULL, 10);
+
+        int pid = StrFindNum(&bgProcessList, jobNum);
+        
+        if(kill(pid, sig)<0)
+            perror("Error with signal specified");
+    }
+    else if(!strcmp(l->list[0], "fg")){
+        int jobNum = strtol(l->list[1], NULL, 10);
+        int pid = StrFindNum(&bgProcessList, jobNum);
+        int pid1 = getpid();
+        bgJobRemove(&bgProcessList, pid);
+        maxJobNum--;
+
+        //tcsetpgrp(0, pid);
+        if(kill(pid, SIGCONT)<0)
+            perror("Error with signal specified");
+            
+        foregroundPid = pid;
+        waitpid(pid, NULL, WUNTRACED);
+        //tcsetpgrp(0, pid1);
+
+    }
+
+    else if(!strcmp(l->list[0], "bg")){
+        int jobNum = strtol(l->list[1], NULL, 10);
+        if(jobNum==-1){
+            printf("No such job\n");
+            return;
+        }
+        int pid = StrFindNum(&bgProcessList, jobNum);
+
+        if(kill(pid, SIGCONT)<0)
+            perror("Error with signal specified");
+    }
     else{
         
         int bgflag = 0;
@@ -191,9 +245,9 @@ void CommandHandler(StringVector *l){
                 StringVectorAdd(l, NULL);
 
             if(execvp(l->list[0], l->list)<0){
-                perror("Execvp error : ");
+                perror("Execvp error ");
             }
-            exit(0);
+            _exit(0);
         }
         else{
             
@@ -201,8 +255,10 @@ void CommandHandler(StringVector *l){
                 bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);//strLinkAdd(&bgProcessList, l->list[0], pid);
                 maxJobNum++;
             }
-            else 
+            else{ 
+            	foregroundPid = pid;
                 waitpid(pid, NULL, 0);
+            }
             //signal(SIGCHLD, handler);            
         }
     }

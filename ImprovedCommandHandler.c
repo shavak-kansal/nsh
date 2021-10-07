@@ -88,8 +88,16 @@ int ImprovedCommandHandler(StringVector *l){
     }
     
     else if(compareStr(l->list[0], "pinfo")){
-        if(l->size>1)
-            p_info(atoi(l->list[1]));
+        if(l->size>1){
+            char *pain;
+            long num = strtol(l->list[1],&pain,10);
+            if (pain[0] != '\0')
+            {
+                printf("Enter a numerical value\n");
+                return 0;
+            }
+            p_info(num);
+        }
         else 
             p_info(-1);
 
@@ -97,7 +105,7 @@ int ImprovedCommandHandler(StringVector *l){
     }
 
     else if(compareStr(l->list[0], "repeat")){    
-        int count = atoi(l->list[1]);
+        int count = strtol(l->list[1],NULL,10);
 
         for(int i=0;i<count;i++){
 

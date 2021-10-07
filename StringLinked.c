@@ -35,6 +35,9 @@ char* bgJobRemove(strLink* list, int pid){
     
     while(temp->next!=list->tail){
         if(temp->next->pid==pid){
+            strLinkNode *temp1 = temp->next;
+
+            
 
             strLinkNode *temp2 = list->head;
             while(temp2->next!=list->tail){
@@ -44,14 +47,16 @@ char* bgJobRemove(strLink* list, int pid){
 
                 temp2 = temp2->next;
             }
-            temp->next->back->next = temp->next->next;
-            temp->next->next->back = temp->next->back;
+            //temp->next = temp->next->next;
+            //temp->next->back = temp;
 
-            char *str = malloc(2*strlen(temp->next->str)*sizeof(char));
-            strcpy(str, temp->next->str);
+            temp->next = temp1->next;
+            temp1->back = temp;
 
-            free(temp->next->str);
-            free(temp->next);
+            char *str = malloc(2*strlen(temp1->str)*sizeof(char));
+            strcpy(str, temp1->str);
+            free(temp1->str);
+            free(temp1);
             return str;
         }
         temp = temp->next;
@@ -107,4 +112,18 @@ char* StrFindPid(strLink *s, int pid){
     }
 
     return str1;
+}
+
+int StrFindNum(strLink *s, int job){
+    strLinkNode* start = s->head;
+    
+    while(start!=s->tail){
+        if(start->jobNum==job){
+            return start->pid;
+            break;
+        }
+        start=start->next;
+    }
+
+    return -1;
 }

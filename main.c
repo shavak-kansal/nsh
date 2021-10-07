@@ -9,6 +9,10 @@ history curr_history;
 char *username;
 char *systemname;
 
+int foregroundPid = -1;
+
+
+
 int cdHandler(char* command_breakdown[50]){
 
     if(!strcmp(curr_directory, "~"))
@@ -142,8 +146,27 @@ char* InputHandler() {
         return inp;
     }
 }
+void HandleSig1(){
+	kill(foregroundPid, SIGTSTP);
+	return;
+}
+
+void HandleSig2(){
+	if(foregroundPid!=-1){
+	kill(foregroundPid, SIGINT);
+	}
+}
+
+void HandleSig3(){
+	_exit(0);
+}
+
 
 int main(){
+    signal(SIGINT, HandleSig2);
+    signal(SIGTSTP, HandleSig1);
+    signal(SIGCHLD, HandleSig3);
+
     strLinkInit(&bgProcessList);
     username = (char*)malloc(400*sizeof(char));
     systemname = (char*)malloc(400*sizeof(char));
@@ -255,7 +278,7 @@ void prompt(){
                 if(commandBreakdown.size==1)
                     HistoryPrint(-1, &curr_history);
                 else
-                    HistoryPrint(atoi(commandBreakdown.list[1]) , &curr_history);
+                    HistoryPrint(strtol(commandBreakdown.list[1], NULL, 10) , &curr_history);
             }
             else if(!strcmp(commandBreakdown.list[0], "exit")){
                 HistoryWriteToFile(&curr_history);
