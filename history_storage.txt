@@ -1,6 +1,4 @@
 20
-jobs -r
-jobs -s
 exit
 sleep 20 & 
 sleep 30 & 
@@ -16,6 +14,8 @@ exit
 ls -l
 exit
 ls -l
+exit
+test
 exit
 test
 exit

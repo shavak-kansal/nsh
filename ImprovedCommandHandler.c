@@ -15,9 +15,9 @@ int compareStr(char *str1 , char *str2){
     }
     return 1;
 }
-int ImprovedCommandHandler(StringVector *ll){
-    StringVector *l = (StringVector*)malloc(sizeof(StringVector));
-    StringVectorInit(l);
+int ImprovedCommandHandler(StringVector *l){
+    //StringVector *l = (StringVector*)malloc(sizeof(StringVector));
+    //StringVectorInit(l);
     // StringVectorCopy(ll, l);
     
     StringVectorAdd(l, "ls");

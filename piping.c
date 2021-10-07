@@ -42,31 +42,28 @@ void pipingHandler(StringVector* list, int size){
             close(fd2[0]);
             dup2(fd2[1],1);
             close(fd2[1]);
-            
-            execvp(list[0].list[0], list[0].list);
         }
         else if(pid>0){
-            //printf("Child process %d\n", pid);
             waitpid(pid, NULL, 0);
             fd1[0] = fd2[0];
             fd1[1] = fd2[1];
         }
     }
     else {
-        in1 = dup(0);
-        out1 = dup(1);
-
-        close(fd2[0]);
-        dup2(fd2[1],1);
-        close(fd2[1]);
-
-        fd1[0] = fd2[0];
-        fd1[1] = fd2[1];
-
-        lsHandler(&(list[0]));
-
-        dup2(in1, 0);
-        dup2(out1, 1);
+        if((pid = fork())==0){
+            
+            close(fd2[0]);
+            dup2(fd2[1],1);
+            close(fd2[1]);
+            
+            ImprovedCommandHandler(&(list[0]));
+            _exit(0);
+        }
+        else if(pid>0){
+            waitpid(pid, NULL, 0);
+            fd1[0] = fd2[0];
+            fd1[1] = fd2[1];
+        }
     }
 
     for(int i=1;i<size-1;i++){
@@ -83,10 +80,10 @@ void pipingHandler(StringVector* list, int size){
 
 
             execvp(list[i].list[0], list[i].list);
+            _exit(0);
         }
         else if(pid>0){
-            //printf("Child process %d\n", pid);
-            waitpid(pid, NULL, 0);
+            //waitpid(pid, NULL, 0);
             close(fd1[0]);
             close(fd1[1]);
 
@@ -104,7 +101,7 @@ void pipingHandler(StringVector* list, int size){
     }
     else if(pid>0){
         //printf("Child process %d\n", pid);
-        waitpid(pid, NULL, 0);
+        //waitpid(pid, NULL, 0);
         close(fd1[0]);
         close(fd1[1]);
     }

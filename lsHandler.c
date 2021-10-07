@@ -68,7 +68,6 @@ void lsHandler(StringVector *ll){
         }
 
         //printf("hello");
-        write(1, "hello", 5);
         printf("%s :\ntotal %lld\n", l->list[ind_name], total/2);
 
         for(int i=0;i<cnt;i++){

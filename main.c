@@ -230,7 +230,7 @@ void prompt(){
 
             int inog;
             int outog;
-s
+
             if(input!=-1){
                 inog = dup(0);
                 //commandBreakdown.list[input] = 0;
@@ -257,9 +257,10 @@ s
                 HistoryWriteToFile(&curr_history);
                 exit(0);
             }
-            // else if(ArgsFinder(commandBreakdown, "|")!=-1){
-
-            // }
+            else if(ArgsFinder(&commandBreakdown, "|")!=-1){
+                int cnt = 0;
+                
+            }
             else {
                 CommandHandler(&commandBreakdown);
             }
