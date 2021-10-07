@@ -42,6 +42,8 @@ void pipingHandler(StringVector* list, int size){
             close(fd2[0]);
             dup2(fd2[1],1);
             close(fd2[1]);
+
+            execvp(list[0].list[0], list[0].list);
         }
         else if(pid>0){
             waitpid(pid, NULL, 0);
@@ -69,43 +71,84 @@ void pipingHandler(StringVector* list, int size){
     for(int i=1;i<size-1;i++){
         pipe(fd2);
 
+        if(boring(&(list[i]))==1){
+            if((pid = fork())==0){
+                dup2(fd1[0],0);
+                close(fd1[0]);
+                close(fd1[1]);
+
+                close(fd2[0]);
+                dup2(fd2[1],1);
+                close(fd2[1]);
+
+
+                execvp(list[i].list[0], list[i].list);
+                _exit(0);
+            }
+            else if(pid>0){
+                //waitpid(pid, NULL, 0);
+                close(fd1[0]);
+                close(fd1[1]);
+
+                fd1[0] = fd2[0];
+                fd1[1] = fd2[1];
+            }
+        }
+        else{
+            if((pid = fork())==0){
+                dup2(fd1[0],0);
+                close(fd1[0]);
+                close(fd1[1]);
+
+                close(fd2[0]);
+                dup2(fd2[1],1);
+                close(fd2[1]);
+
+
+                ImprovedCommandHandler(&(list[i]));
+                _exit(0);
+            }
+            else if(pid>0){
+                //waitpid(pid, NULL, 0);
+                close(fd1[0]);
+                close(fd1[1]);
+
+                fd1[0] = fd2[0];
+                fd1[1] = fd2[1];
+            }
+        }
+    }
+    if(boring(&(list[i]))==1){
         if((pid = fork())==0){
             dup2(fd1[0],0);
             close(fd1[0]);
             close(fd1[1]);
 
-            close(fd2[0]);
-            dup2(fd2[1],1);
-            close(fd2[1]);
-
-
-            execvp(list[i].list[0], list[i].list);
-            _exit(0);
+            execvp(list[size-1].list[0], list[size-1].list);
         }
         else if(pid>0){
+            //printf("Child process %d\n", pid);
             //waitpid(pid, NULL, 0);
             close(fd1[0]);
             close(fd1[1]);
-
-            fd1[0] = fd2[0];
-            fd1[1] = fd2[1];
         }
     }
+    else {
+        if((pid = fork())==0){
+            dup2(fd1[0],0);
+            close(fd1[0]);
+            close(fd1[1]);
 
-    if((pid = fork())==0){
-        dup2(fd1[0],0);
-        close(fd1[0]);
-        close(fd1[1]);
-
-        execvp(list[size-1].list[0], list[size-1].list);
+            ImprovedCommandHandler(&(list[i]));
+            _exit(0);
+        }
+        else if(pid>0){
+            //printf("Child process %d\n", pid);
+            //waitpid(pid, NULL, 0);
+            close(fd1[0]);
+            close(fd1[1]);
+        }
     }
-    else if(pid>0){
-        //printf("Child process %d\n", pid);
-        //waitpid(pid, NULL, 0);
-        close(fd1[0]);
-        close(fd1[1]);
-    }
-
     close(fd1[0]);
     close(fd1[1]);
 }
