@@ -200,7 +200,8 @@ void prompt(){
             //char *name = StrFindPid(&bgProcessList, pid);
 
             char* name = bgJobRemove(&bgProcessList,pid);
-            if(name!=NULL){
+            //if(name!=NULL){
+            if(1){    
                 char msg[20];
 
                 if(status==0)

@@ -1,9 +1,4 @@
 20
-exit
-sleep 5
-exit
-sleep 5
-exit
 sleep 5
 exit
 sleep 10
@@ -18,4 +13,9 @@ sleep 5 &
 jobs
 echo hello
 jobs
+exit
+sleep 10 &
+fg 1
+jobs
+echo hello
 exit

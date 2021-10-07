@@ -252,7 +252,7 @@ void CommandHandler(StringVector *l){
         }
         else{
             //bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);
-            
+
             if(bgflag){
                 bgJobAdder(&bgProcessList, l->list[0], pid, maxJobNum);//strLinkAdd(&bgProcessList, l->list[0], pid);
                 maxJobNum++;
