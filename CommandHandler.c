@@ -228,8 +228,9 @@ void CommandHandler(StringVector *l){
         if((index=ArgsFinder(l, "&"))!=-1)
             bgflag = 1;
 
+        signal(SIGTTOU, SIG_IGN);
+
         int pid = fork();
-        
         if(pid==-1){
             perror("Fork error");
         }
@@ -241,9 +242,16 @@ void CommandHandler(StringVector *l){
                 l->list[index] = NULL;
             }
             else {
+                //setpgid(0,0);
+                printf("group leader : %d\n",  tcgetpgrp(0));
+                //tcsetpgrp(0, getpgid(0));
+                
+                printf("child : %d\n", getpgid(0));
                 StringVectorAdd(l, NULL);
                 signal(SIGINT, SIG_DFL);
                 signal(SIGTSTP, SIG_DFL);
+
+                printf("group leader : %d\n",  tcgetpgrp(0));
             }
             if(execvp(l->list[0], l->list)<0){
                 perror("Execvp error ");
@@ -261,9 +269,9 @@ void CommandHandler(StringVector *l){
             	tcsetpgrp(0, pid);
                 signal(SIGTTOU, SIG_IGN);
                 waitpid(pid, NULL, WUNTRACED);
-                bgJobRemove(&bgProcessList,pid);
+                //bgJobRemove(&bgProcessList,pid);
                 signal(SIGTTOU, SIG_DFL);
-                tcsetpgrp(0, getpgrp());
+                tcsetpgrp(0, shellgpid);
             }
             //signal(SIGCHLD, handler);            
         }

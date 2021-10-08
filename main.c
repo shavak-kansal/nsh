@@ -9,6 +9,9 @@ history curr_history;
 char *username;
 char *systemname;
 
+int shellpid;
+int shellgpid;
+
 int foregroundPid = -1;
 
 
@@ -166,6 +169,10 @@ void control_d(){
 
 
 int main(){
+    shellpid = getpid();
+    shellgpid = getpgrp();
+
+    printf("%d %d\n", shellpid, shellgpid);
     signal(SIGTSTP, SIG_IGN);
     signal(SIGINT, SIG_IGN);
     //signal(SIGCHLD, control_d);

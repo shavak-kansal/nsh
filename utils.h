@@ -27,6 +27,8 @@ extern char *home_directory;
 #include <ctype.h>
 #include <string.h>
 
+extern int shellpid;
+extern int shellgpid;
 //#include "StringVector.c"
 //#include "ArgsFinder.c"
 //#include "lsHandler.c"
