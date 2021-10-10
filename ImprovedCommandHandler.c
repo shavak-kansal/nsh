@@ -177,6 +177,94 @@ int ImprovedCommandHandler(StringVector *l){
         }
         _exit(0);    
     }
+    else if(!strcmp){
+
+        int interval;
+        int period;
+        
+        StringVectorDelete(l, 0);
+        int index1 = ArgsFinder(l, "-interval");
+        StringVectorDelete(l, index1);
+        interval = strtol(l->list[index1], NULL, 10); 
+        StringVectorDelete(l, index1);
+
+        index1 = ArgsFinder(l, "-period");
+        StringVectorDelete(l, index1);
+        period = strtol(l->list[index1], NULL, 10);
+        StringVectorDelete(l, index1);
+
+        int cnt = period/interval;
+
+        for(int i=0;i<cnt;i++){
+            sleep(interval);
+            if(compareStr(l->list[2],"jobs")){
+                int rFlag = ArgsFinder(l, "-r");
+                int sFlag = ArgsFinder(l, "-s");
+                
+                strLinkNode* step = bgProcessList.head;
+
+                if((rFlag==-1)&&(sFlag==-1))
+                    while(step->next!=bgProcessList.tail){
+                        step = step->next;
+                        char state = pid_state(step->pid);
+                        char msg[30];
+
+                        if(state!='T')
+                            strcpy(msg, "Running");
+                        else 
+                            strcpy(msg, "Stopped");
+                            printf("[%d] %s %s [%d]\n", step->jobNum,msg ,step->str, step->pid);
+                    }
+                else if(rFlag!=-1){
+                    while(step->next!=bgProcessList.tail){
+                        step = step->next;
+                        if(pid_state(step->pid)=='R')
+                            printf("Running [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
+                    }
+                }
+                else if(sFlag!=-1){
+                    while(step->next!=bgProcessList.tail){
+                        step = step->next;
+                        char state = pid_state(step->pid);
+                        if(pid_state(step->pid)=='S')
+                            printf("Stopped [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
+                    }
+                }
+
+            }
+            else if(compareStr(l->list[2],"echo")){
+
+                int i=3;
+                
+                while(i<l->size){
+                    printf("%s", l->list[i]);
+                    i++;
+                }
+
+                printf("\n");
+            }
+        
+            else if(compareStr(l->list[0],"pwd")){
+            
+                char *msg = pwd();
+                printf("%s\n", msg);
+                free(msg);
+            }
+
+            else if(compareStr(l->list[2], "ls")){
+                StringVector cpy;
+                StringVectorInit(&cpy);
+
+                for(int i=2;i<l->size;i++)
+                    StringVectorAdd(&cpy, l->list[i]);
+
+                lsHandler(&cpy);
+
+                StringVectorErase(&cpy);
+            }
+        }
+        _exit(0);
+    }
     
     else return 1;
     
