@@ -59,11 +59,35 @@ Replaces a string stored in the StringVector l with another string.
 
 This function just returns the position of the arg (string) in StringVector l (can be thought of as a array of strings) if it exists else it returns -1.
 
+### betterArgsFinder
+> int betterArgsFinder(StringVector* l, char *arg, int start)
+
+Similar to ArgsFinder but takes in a starting index and returns the count of the occurence of arg string in the list of l
+
 ### CommandHandler
 >void CommandHandler(StringVector *l);
 
 Handles bulk of the work, after recieveing the command, after getting tokenized the command is sent to CommandHandler, which handles most of the commands except the "exit" command. 
 
+### ImprovedCommandHandler
+> int ImprovedCommandHandler(StringVector *l)
+
+Similar to the old CommandHandler, however it doesnt use a recursive call for repeat and doesn't handle external commands. It is used for the piping extension.
+
+### pipingHandler
+> void pipingHandler(StringVector* list, int size)
+
+pipingHandler handles the piping if involved in the command.
+
+### boring 
+> int boring(StringVector *l)
+
+boring function just detects if given command is a in built command.
+
+### ReplayFunction
+> void ReplayFunction(StringVector* command, int interval, int period)
+
+ReplayFunction handles the replay function
 ### lsHandler
 >void lsHandler(StringVector *l);
 
