@@ -1,7 +1,4 @@
 20
-sleep 5
-exit
-sleep 10
 jobs
 sleep 10 &
 jobs
@@ -19,3 +16,6 @@ fg 1
 jobs
 echo hello
 exit
+replay -period 10 -interval 2 echo hello > lines.txt
+replay -period 10 -interval 2 echo hello >> lines.txt
+replay -period 10 -interval 2 echo hello >> lines.txt 

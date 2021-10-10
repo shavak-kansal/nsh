@@ -132,6 +132,7 @@ char* InputHandler() {
                         printf(" ");
                     }
                 } else if (c == 4) {
+                    HistoryWriteToFile(&curr_history);
                     exit(0);
                 } else {
                     printf("%d\n", c);
@@ -254,6 +255,7 @@ void prompt(){
 
             int input = ArgsFinder(&commandBreakdown, "<");
             int output = ArgsFinder(&commandBreakdown, ">");
+            int append = ArgsFinder(&commandBreakdown, ">>");
 
             int inog;
             int outog;
@@ -264,18 +266,35 @@ void prompt(){
                 StringVectorDelete(&commandBreakdown, input);
                 //fopen(commandBreakdown.list[input+1], "r");
                 int fd = open(commandBreakdown.list[input] , O_RDONLY);
+
+                if(fd==-1){
+                    perror("Error with opening input file");
+                    continue;
+                }
+
                 dup2(fd, 0);
                 StringVectorDelete(&commandBreakdown, input);
             }
+            
             if(output!=-1){
                 output = ArgsFinder(&commandBreakdown, ">");
                 outog = dup(1);
                 //commandBreakdown.list[output] = 0;
                 StringVectorDelete(&commandBreakdown, output);
                 //fopen(commandBreakdown.list[output+1], "w");
-                int fd = open(commandBreakdown.list[output] , O_WRONLY);
+                int fd = open(commandBreakdown.list[output] , O_WRONLY | O_CREAT, 0644);
+
                 dup2(fd, 1);
                 StringVectorDelete(&commandBreakdown, output);
+            }
+            else if(append!=-1){
+                append = ArgsFinder(&commandBreakdown, ">>");
+                outog = dup(1);
+
+                StringVectorDelete(&commandBreakdown, append);
+                int fd = open(commandBreakdown.list[append] , O_WRONLY|O_CREAT|O_APPEND, 0644);
+                dup2(fd, 1);
+                StringVectorDelete(&commandBreakdown, append);
             }
 
             if(!strcmp(commandBreakdown.list[0], "history")){
@@ -320,7 +339,7 @@ void prompt(){
                 dup2(inog, 0);
                 //open(stdin, "r");
             }
-            if(output!=-1){
+            if((output!=-1)||(append!=-1)){
                 close(1);
                 //open(stdout, "w");
                 dup2(outog, 1);

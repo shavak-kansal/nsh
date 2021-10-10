@@ -12,6 +12,7 @@ char* pwd();
 void prompt();
 void pipingHandler(StringVector* list, int size);
 int ImprovedCommandHandler(StringVector *l);
+void ReplayFunction(StringVector* command, int interval, int period);
 
 char pid_state(int pid);
 #endif

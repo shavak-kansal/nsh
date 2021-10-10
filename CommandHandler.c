@@ -220,6 +220,23 @@ void CommandHandler(StringVector *l){
         if(kill(pid, SIGCONT)<0)
             perror("Error with signal specified");
     }
+    else if(!strcmp(l->list[0], "replay")){
+        int interval;
+        int period;
+        
+        StringVectorDelete(l, 0);
+        int index1 = ArgsFinder(l, "-interval");
+        StringVectorDelete(l, index1);
+        interval = strtol(l->list[index1], NULL, 10); 
+        StringVectorDelete(l, index1);
+
+        index1 = ArgsFinder(l, "-period");
+        StringVectorDelete(l, index1);
+        period = strtol(l->list[index1], NULL, 10);
+        StringVectorDelete(l, index1);
+
+        ReplayFunction(l, interval, period);
+    }
     else{
         
         int bgflag = 0;
