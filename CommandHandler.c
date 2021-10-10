@@ -235,6 +235,9 @@ void CommandHandler(StringVector *l){
         period = strtol(l->list[index1], NULL, 10);
         StringVectorDelete(l, index1);
 
+        index1 = ArgsFinder(l, "-command");
+        StringVectorDelete(l, index1);
+
         ReplayFunction(l, interval, period);
     }
     else{

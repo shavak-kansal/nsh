@@ -177,7 +177,7 @@ int ImprovedCommandHandler(StringVector *l){
         }
         _exit(0);    
     }
-    else if(!strcmp){
+    else if(!strcmp(l->list[0], "replay")){
 
         int interval;
         int period;
@@ -191,6 +191,9 @@ int ImprovedCommandHandler(StringVector *l){
         index1 = ArgsFinder(l, "-period");
         StringVectorDelete(l, index1);
         period = strtol(l->list[index1], NULL, 10);
+        StringVectorDelete(l, index1);
+
+        index1 = ArgsFinder(l, "-command");
         StringVectorDelete(l, index1);
 
         int cnt = period/interval;
@@ -218,7 +221,7 @@ int ImprovedCommandHandler(StringVector *l){
                 else if(rFlag!=-1){
                     while(step->next!=bgProcessList.tail){
                         step = step->next;
-                        if(pid_state(step->pid)=='R')
+                        if(pid_state(step->pid)!='T')
                             printf("Running [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
                     }
                 }
@@ -226,7 +229,7 @@ int ImprovedCommandHandler(StringVector *l){
                     while(step->next!=bgProcessList.tail){
                         step = step->next;
                         char state = pid_state(step->pid);
-                        if(pid_state(step->pid)=='S')
+                        if(pid_state(step->pid)=='T')
                             printf("Stopped [%d] %s [%d]\n", step->jobNum, step->str, step->pid);
                     }
                 }

@@ -201,19 +201,20 @@ void prompt(){
             //char *name = StrFindPid(&bgProcessList, pid);
 
             char* name = bgJobRemove(&bgProcessList,pid);
-            //if(name!=NULL){
-            if(1){    
-                char msg[20];
+            if(name!=NULL){
+                if(1){    
+                    char msg[20];
 
-                if(status==0)
-                    strcpy(msg, "normally");
-                else 
-                    strcpy(msg, "abnormally");
-                    
-                printf("%s with %d exited %s\n", name, pid, msg);
-                free(name);
-                fflush(stdout);
-                maxJobNum--;
+                    if(status==0)
+                        strcpy(msg, "normally");
+                    else 
+                        strcpy(msg, "abnormally");
+                        
+                    printf("%s with %d exited %s\n", name, pid, msg);
+                    free(name);
+                    fflush(stdout);
+                    maxJobNum--;
+                }
             }
         }
 

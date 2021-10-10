@@ -3,6 +3,10 @@
 
 extern char *curr_directory;
 extern char *home_directory;
+extern char *username;
+extern char *systemname;
+extern int maxJobNum;
+extern int foregroundPid;
 
 #include <stdio.h>
 #include <stdlib.h>

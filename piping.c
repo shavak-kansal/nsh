@@ -22,6 +22,14 @@ int boring(StringVector* l) {
         return 0;
     }
 
+    else if(!strcmp(l->list[0], "replay")){
+        return 0;
+    }
+
+    else if(!strcmp(l->list[0], "repeat")){
+        return 0;
+    }
+
     else return 1;
 }
 
@@ -47,7 +55,7 @@ void pipingHandler(StringVector* list, int size){
             execvp(list[0].list[0], list[0].list);
         }
         else if(pid>0){
-            waitpid(pid, NULL, 0);
+            //waitpid(pid, NULL, 0);
             fd1[0] = fd2[0];
             fd1[1] = fd2[1];
         }
@@ -151,6 +159,12 @@ void pipingHandler(StringVector* list, int size){
             close(fd1[1]);
         }
     }
+
     // close(fd1[0]);
     // close(fd1[1]);
+
+    // char *msg1;
+    // msg1 = pwd();
+    // printf("<%s@%s:%s>", username, systemname, msg1);
+    // free(msg1);
 }
