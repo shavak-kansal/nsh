@@ -55,7 +55,7 @@ void pipingHandler(StringVector* list, int size){
             execvp(list[0].list[0], list[0].list);
         }
         else if(pid>0){
-            //waitpid(pid, NULL, 0);
+            waitpid(pid, NULL, 0);
             fd1[0] = fd2[0];
             fd1[1] = fd2[1];
         }
